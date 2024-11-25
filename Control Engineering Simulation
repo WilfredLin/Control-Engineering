@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, lsim
+
+# Define the system parameters
+num = [11, 13]  # Numerator coefficients of the transfer function
+den = [11, 12, 11, 10.5]  # Denominator coefficients of the transfer function
+system = TransferFunction(num, den)
+
+t = np.linspace(0, 10, 100)  # Time array
+u = np.ones_like(t)  # Input (step function)
+
+# Simulate the system response
+t, y, x_state = lsim(system, u=u, T=t)
+
+# Plot the results
+plt.figure(figsize=(10, 5))
+plt.plot(t, y, label='System Response')
+plt.title('System Response to Step Input')
+plt.xlabel('Time (s)')
+plt.ylabel('Output')
+plt.grid()
+plt.legend()
+plt.show()
