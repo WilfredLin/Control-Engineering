@@ -1,0 +1,20 @@
+import sympy as sp
+
+# Define the variables
+R1, R2 = sp.symbols('R1 R2')  # Resistors
+Vin, Vout = sp.symbols('Vin Vout')  # Input and output voltages
+
+# Define the transfer function for an inverting operational amplifier
+# Vout = - (R2/R1) * Vin
+transfer_function = sp.Eq(Vout, - (R2 / R1) * Vin)
+
+# Display the transfer function
+print('Transfer Function for Inverting Operational Amplifier:')
+print(transfer_function)
+
+# Solve for Vout in terms of Vin
+output_voltage = sp.solve(transfer_function, Vout)[0]
+
+# Display the output voltage
+print('Output Voltage (Vout) in terms of Input Voltage (Vin):')
+print(output_voltage)
