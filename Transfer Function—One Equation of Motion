@@ -1,0 +1,19 @@
+import sympy as sp
+
+# Define the variables
+m, b, k = sp.symbols('m b k')  # Mass, damping coefficient, spring constant
+s = sp.symbols('s')  # Laplace variable
+F = sp.symbols('F')  # Force input
+
+# Define the equation of motion for a damped harmonic oscillator
+# m * d^2x/dt^2 + b * dx/dt + k * x = F
+# In Laplace transform: m * s^2 * X(s) + b * s * X(s) + k * X(s) = F(s)
+X = sp.Function('X')(s)
+equation_of_motion = sp.Eq(m * s**2 * X + b * s * X + k * X, F)
+
+# Solve for the transfer function H(s) = X(s)/F(s)
+transfer_function = sp.solve(equation_of_motion, X)[0] / F
+
+# Display the transfer function
+print('Transfer Function for Damped Harmonic Oscillator:')
+print(transfer_function)
