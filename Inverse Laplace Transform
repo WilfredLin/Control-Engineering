@@ -1,0 +1,11 @@
+import sympy as sp
+
+# Define the variable and function
+s, t = sp.symbols('s t')
+F = 1 / (s**2 + 1)  # Example function in the Laplace domain
+
+# Calculate the Inverse Laplace Transform
+inv_L_F = sp.inverse_laplace_transform(F, s, t)
+
+# Display the result
+print('Inverse Laplace Transform of F(s):', inv_L_F)
