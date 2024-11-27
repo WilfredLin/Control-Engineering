@@ -1,0 +1,35 @@
+import sympy as sp
+
+# Define the variables
+m1, m2, b1, b2, k1, k2 = sp.symbols('m1 m2 b1 b2 k1 k2')  # Masses, damping coefficients, spring constants
+x1, x2 = sp.symbols('x1 x2')  # Displacements
+F1, F2 = sp.symbols('F1 F2')  # Force inputs
+s = sp.symbols('s')  # Laplace variable
+
+# Define the equations of motion for a two degrees of freedom system
+# m1 * x1'' + b1 * x1' + (k1 + k2) * x1 - k2 * x2 = F1
+# m2 * x2'' + b2 * x2' + k2 * x2 - k2 * x1 = F2
+
+# Define the Laplace transforms of the displacements and their derivatives
+X1 = sp.Function('X1')(s)
+X2 = sp.Function('X2')(s)
+
+# Laplace transforms of the derivatives
+X1_dot = s * X1
+X1_ddot = s**2 * X1
+X2_dot = s * X2
+X2_ddot = s**2 * X2
+
+# Substitute into the equations of motion
+equation1_laplace = sp.Eq(m1 * X1_ddot + b1 * X1_dot + (k1 + k2) * X1 - k2 * X2, F1)
+equation2_laplace = sp.Eq(m2 * X2_ddot + b2 * X2_dot + k2 * X2 - k2 * X1, F2)
+
+# Solve for the transfer functions
+transfer_function1 = sp.solve(equation1_laplace, F1)[0] / X1
+transfer_function2 = sp.solve(equation2_laplace, F2)[0] / X2
+
+# Display the transfer functions
+print('Transfer Function for the First Mass:')
+print(transfer_function1)
+print('Transfer Function for the Second Mass:')
+print(transfer_function2)
