@@ -1,0 +1,31 @@
+import sympy as sp
+
+# Define the variable and function
+t = sp.symbols('t')
+s = sp.symbols('s')
+y = sp.Function('y')(t)
+
+# Define the components
+R1, R2, C = sp.symbols('R1 R2 C')
+
+# Define the voltage division equation for the transfer function
+# V_out = V_in * (Z2 / (Z1 + Z2))
+# where Z1 = R1 and Z2 = 1/(s*C)
+Z1 = R1
+Z2 = 1/(s * C)
+
+# Voltage division
+V_in = sp.symbols('V_in')
+V_out = V_in * (Z2 / (Z1 + Z2))
+
+# Solve for the transfer function H(s) = V_out / V_in
+H_s = sp.simplify(V_out / V_in)
+
+# Display the Transfer Function
+print('Transfer Function H(s):', H_s)
+
+# Define the inverse Laplace Transform to find the system response
+system_response = sp.inverse_laplace_transform(H_s, s, t)
+
+# Display the system response
+print('System Response:', system_response)
