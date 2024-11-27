@@ -1,0 +1,30 @@
+import sympy as sp
+
+# Define the variables
+I1, I2, I3 = sp.symbols('I1 I2 I3')  # Mesh currents
+V1, V2, V3 = sp.symbols('V1 V2 V3')  # Voltage sources
+R1, R2, R3 = sp.symbols('R1 R2 R3')  # Resistances
+
+# Define the mesh equations using Kirchhoff's Voltage Law (KVL)
+# Mesh 1 (loop with I1)
+mesh_eq1 = sp.Eq(V1 - I1 * R1 - (I1 - I2) * R2, 0)
+
+# Mesh 2 (loop with I2)
+mesh_eq2 = sp.Eq(-V2 + (I2 - I1) * R2 - I2 * R3, 0)
+
+# Mesh 3 (loop with I3)
+mesh_eq3 = sp.Eq(-V3 + I3 * R3 + (I3 - I2) * R2, 0)
+
+# Display the mesh equations
+print('Mesh Equation 1:', mesh_eq1)
+print('Mesh Equation 2:', mesh_eq2)
+print('Mesh Equation 3:', mesh_eq3)
+
+# Solve the mesh equations for the mesh currents
+solution = sp.solve((mesh_eq1, mesh_eq2, mesh_eq3), (I1, I2, I3))
+
+# Display the solutions
+print('Solution for Mesh Currents:')
+print('I1:', solution[I1])
+print('I2:', solution[I2])
+print('I3:', solution[I3])
