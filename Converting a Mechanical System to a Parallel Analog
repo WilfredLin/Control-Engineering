@@ -1,0 +1,26 @@
+import sympy as sp
+
+# Define the variables
+J, b, K, R, L = sp.symbols('J b K R L')  # Inertia, damping coefficient, motor constant, resistance, inductance
+s = sp.symbols('s')  # Laplace variable
+
+# Define the transfer function for a DC motor with load
+# The transfer function G(s) = K / (Js^2 + bs + (K^2/R))
+numerator = K
+denominator = J * s**2 + b * s + (K**2 / R)
+
+# Transfer function
+G = numerator / denominator
+
+# Display the transfer function
+G_simplified = G.simplify()
+
+# Convert the mechanical system to a parallel analog
+# Assuming a standard parallel representation for the mechanical system
+# The parallel analog can be represented as a combination of admittances
+# Here, we create the equivalent parallel circuit parameters
+Y_eq = 1 / R  # Equivalent admittance
+C_eq = (K**2 / (R * b)) + (L / R)  # Equivalent capacitance derived from the inertia and damping
+
+# Display the equivalent parallel parameters
+Y_eq, C_eq, G_simplified
