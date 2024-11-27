@@ -1,0 +1,11 @@
+import sympy as sp
+
+# Define the variable and function
+s, t = sp.symbols('s t')
+f = sp.exp(-t) * sp.sin(t)  # Example function
+
+# Calculate the Laplace Transform
+L_f = sp.laplace_transform(f, t, s)
+
+# Display the result
+print('Laplace Transform of f(t):', L_f[0])
