@@ -1,0 +1,23 @@
+import sympy as sp
+
+# Define the variable
+x = sp.symbols('x')
+
+# Define the function to be linearized
+f = sp.sin(x)  # Example function
+
+# Define the point around which to linearize
+x0 = 0
+
+# Calculate the first derivative at the point x0
+f_prime = f.diff(x).subs(x, x0)
+
+# Calculate the function value at the point x0
+f_value = f.subs(x, x0)
+
+# Define the linear approximation
+linear_approx = f_value + f_prime * (x - x0)
+
+# Display the linear approximation
+linear_approx_simplified = sp.simplify(linear_approx)
+linear_approx_simplified
