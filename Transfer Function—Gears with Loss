@@ -1,0 +1,10 @@
+import sympy as sp
+
+# Define the variables
+J1, J2, b1, b2, k1, k2 = sp.symbols('J1 J2 b1 b2 k1 k2')  # Inertia, damping coefficients, spring constants
+theta1, theta2 = sp.symbols('theta1 theta2')  # Angular displacements
+T1, T2 = sp.symbols('T1 T2')  # Torque inputs
+t = sp.symbols('t')  # Time
+
+# Define the equations of motion for a system with gears and losses
+# J1 * theta1'' + b1 * theta1' + (k1 + k2) * theta1 -
