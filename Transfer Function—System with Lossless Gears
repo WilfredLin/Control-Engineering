@@ -1,0 +1,34 @@
+import sympy as sp
+
+# Define the variables
+J1, J2, b1, b2, k1, k2 = sp.symbols('J1 J2 b1 b2 k1 k2')  # Inertia, damping coefficients, spring constants
+theta1, theta2 = sp.symbols('theta1 theta2')  # Angular displacements
+T1, T2 = sp.symbols('T1 T2')  # Torque inputs
+
+# Define the equations of motion for a system with lossless gears
+# J1 * theta1'' + b1 * theta1' + (k1 + k2) * theta1 - k2 * theta2 = T1
+# J2 * theta2'' + b2 * theta2' + k2 * theta2 - k2 * theta1 = T2
+
+# Define the equations of motion
+equation1 = sp.Eq(J1 * sp.Derivative(theta1, t, 2) + b1 * sp.Derivative(theta1, t) + (k1 + k2) * theta1 - k2 * theta2, T1)
+equation2 = sp.Eq(J2 * sp.Derivative(theta2, t, 2) + b2 * sp.Derivative(theta2, t) + k2 * theta2 - k2 * theta1, T2)
+
+# Display the equations of motion
+print('Equation of Motion for the First Inertia:')
+print(equation1)
+print('Equation of Motion for the Second Inertia:')
+print(equation2)
+
+# Transfer Function Calculation
+s = sp.symbols('s')
+# Taking Laplace Transform of the equations
+equation1_laplace = equation1.subs({sp.Derivative(theta1, t): s * theta1, sp.Derivative(theta1, t, 2): s**2 * theta1}).simplify()
+equation2_laplace = equation2.subs({sp.Derivative(theta2, t): s * theta2, sp.Derivative(theta2, t, 2): s**2 * theta2}).simplify()
+
+# Solve for transfer function H(s) = Theta2(s) / Theta1(s)
+H = sp.solve(equation1_laplace, theta2)[0] / sp.solve(equation2_laplace, theta1)[0]
+H = sp.simplify(H)
+
+# Display the transfer function
+print('Transfer Function H(s) = Theta2(s) / Theta1(s):')
+print(H)
