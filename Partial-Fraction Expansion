@@ -1,0 +1,12 @@
+import sympy as sp
+
+# Define the variable and function
+x = sp.symbols('x')
+numerator = x + 2  # Example numerator
+denominator = (x - 1) * (x + 2)  # Example denominator
+
+# Perform partial fraction expansion
+partial_fraction = sp.apart(numerator / denominator)
+
+# Display the result
+print('Partial Fraction Expansion:', partial_fraction)
