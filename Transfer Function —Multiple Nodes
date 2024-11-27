@@ -1,0 +1,66 @@
+import sympy as sp
+
+# Define the variable and function
+t = sp.symbols('t')
+s = sp.symbols('s')
+y = sp.Function('y')(t)
+
+# Define the components for Node 1
+R1_1, R2_1, C1 = sp.symbols('R1_1 R2_1 C1')
+Z1_1 = R1_1
+Z2_1 = 1/(s * C1)
+
+# Voltage division for Node 1
+V_in_1 = sp.symbols('V_in_1')
+V_out_1 = V_in_1 * (Z2_1 / (Z1_1 + Z2_1))
+
+# Transfer function for Node 1
+H_s1 = sp.simplify(V_out_1 / V_in_1)
+
+# Define the components for Node 2
+R1_2, R2_2, C2 = sp.symbols('R1_2 R2_2 C2')
+Z1_2 = R1_2
+Z2_2 = 1/(s * C2)
+
+# Voltage division for Node 2
+V_in_2 = sp.symbols('V_in_2')
+V_out_2 = V_in_2 * (Z2_2 / (Z1_2 + Z2_2))
+
+# Transfer function for Node 2
+H_s2 = sp.simplify(V_out_2 / V_in_2)
+
+# Define the components for Node 3
+R1_3, R2_3, C3 = sp.symbols('R1_3 R2_3 C3')
+Z1_3 = R1_3
+Z2_3 = 1/(s * C3)
+
+# Voltage division for Node 3
+V_in_3 = sp.symbols('V_in_3')
+V_out_3 = V_in_3 * (Z2_3 / (Z1_3 + Z2_3))
+
+# Transfer function for Node 3
+H_s3 = sp.simplify(V_out_3 / V_in_3)
+
+# Define the feedback loop
+H_feedback = sp.symbols('H_feedback')
+
+# Overall transfer function considering feedback from Node 1 and Node 2
+H_s_total = (H_s1 + H_s2 + H_s3) / (1 + H_feedback * (H_s1 + H_s2 + H_s3))
+
+# Display the Transfer Functions
+print('Transfer Function H(s) for Node 1:', H_s1)
+print('Transfer Function H(s) for Node 2:', H_s2)
+print('Transfer Function H(s) for Node 3:', H_s3)
+print('Overall Transfer Function with Feedback H(s):', H_s_total)
+
+# Define the inverse Laplace Transform to find the system response
+system_response_1 = sp.inverse_laplace_transform(H_s1, s, t)
+system_response_2 = sp.inverse_laplace_transform(H_s2, s, t)
+system_response_3 = sp.inverse_laplace_transform(H_s3, s, t)
+system_response_total = sp.inverse_laplace_transform(H_s_total, s, t)
+
+# Display the system responses
+print('System Response for Node 1:', system_response_1)
+print('System Response for Node 2:', system_response_2)
+print('System Response for Node 3:', system_response_3)
+print('Overall System Response with Feedback:', system_response_total)
