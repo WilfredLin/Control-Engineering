@@ -1,0 +1,16 @@
+import sympy as sp
+
+# Define the variables
+J, b, K, R, L = sp.symbols('J b K R L')  # Inertia, damping coefficient, motor constant, resistance, inductance
+s = sp.symbols('s')  # Laplace variable
+
+# Define the transfer function for a DC motor with load
+# The transfer function G(s) = K / (Js^2 + bs + (K^2/R))
+numerator = K
+denominator = J * s**2 + b * s + (K**2 / R)
+
+# Transfer function
+G = numerator / denominator
+
+# Display the transfer function
+G.simplify()
