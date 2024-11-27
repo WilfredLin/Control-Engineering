@@ -1,0 +1,27 @@
+import sympy as sp
+
+# Define the variables
+m1, m2, b1, b2, k1, k2 = sp.symbols('m1 m2 b1 b2 k1 k2')  # Masses, damping coefficients, spring constants
+x1, x2 = sp.symbols('x1 x2')  # Displacements
+F1, F2 = sp.symbols('F1 F2')  # Force inputs
+
+# Define the equations of motion for a two degrees of freedom system by inspection
+# m1 * d^2x1/dt^2 + b1 * dx1/dt + k1 * x1 + k2 * (x1 - x2) = F1
+# m2 * d^2x2/dt^2 + b2 * dx2/dt + k2 * (x2 - x1) = F2
+
+# The equations can be written in the form:
+# m1 * x1'' + b1 * x1' + (k1 + k2) * x1 - k2 * x2 = F1
+# m2 * x2'' + b2 * x2' + (k2) * x2 - k2 * x1 = F2
+
+# Define the second derivatives of the displacements
+x1_ddot = sp.Function('x1_ddot')()
+x2_ddot = sp.Function('x2_ddot')()
+
+equation1 = sp.Eq(m1 * x1_ddot + b1 * sp.Function('x1_dot')() + (k1 + k2) * x1 - k2 * x2, F1)
+equation2 = sp.Eq(m2 * x2_ddot + b2 * sp.Function('x2_dot')() + k2 * x2 - k2 * x1, F2)
+
+# Display the equations of motion
+print('Equation of Motion for the First Mass:')
+print(equation1)
+print('Equation of Motion for the Second Mass:')
+print(equation2)
