@@ -1,0 +1,67 @@
+import sympy as sp
+
+# Define the variable and function
+t = sp.symbols('t')
+s = sp.symbols('s')
+y = sp.Function('y')(t)
+
+# Define the differential equation for an electrical network
+# Example: L * y'' + R * y' + (1/C) * y = 0
+L, R, C = sp.symbols('L R C')
+differential_eq = sp.Eq(L * y.diff(t, 2) + R * y.diff(t) + (1/C) * y, 0)
+
+# Take the Laplace Transform of both sides
+laplace_eq = sp.laplace_transform(differential_eq.lhs, t, s) - sp.laplace_transform(differential_eq.rhs, t, s)
+
+# Solve for Y(s)
+Y = sp.Function('Y')(s)
+solution = sp.solve(laplace_eq, Y)
+
+# Display the Transfer Function
+print('Transfer Function:', solution)
+
+# Define the inverse Laplace Transform to find the system response
+system_response = sp.inverse_laplace_transform(solution[0], s, t)
+
+# Display the system response
+print('System Response:', system_response)
+
+# Voltage-current relationship for components
+# Resistor: V = I * R
+R = sp.symbols('R')
+I = sp.Function('I')(t)
+V_R = R * I
+
+# Capacitor: I = C * (dV/dt)
+C = sp.symbols('C')
+V_C = sp.Function('V_C')(t)
+I_C = C * V_C.diff(t)
+
+# Inductor: V = L * (dI/dt)
+L = sp.symbols('L')
+I_L = sp.Function('I_L')(t)
+V_L = L * I_L.diff(t)
+
+# Voltage-charge relationship for capacitors
+# Q = C * V
+Q = sp.Function('Q')(t)
+V_C = Q / C
+
+# Impedance relationships
+# Resistor: Z_R = R
+Z_R = R
+
+# Capacitor: Z_C = 1/(s*C)
+Z_C = 1/(s * C)
+
+# Inductor: Z_L = s*L
+Z_L = s * L
+
+# Display relationships
+print('Voltage across Resistor:', V_R)
+print('Current through Capacitor:', I_C)
+print('Voltage across Capacitor:', V_C)
+print('Voltage across Inductor:', V_L)
+print('Impedance of Resistor:', Z_R)
+print('Impedance of Capacitor:', Z_C)
+print('Impedance of Inductor:', Z_L)
