@@ -1,0 +1,51 @@
+import sympy as sp
+
+# Define the variables
+t = sp.symbols('t')
+V = sp.Function('V')(t)  # Voltage as a function of time
+I = sp.Function('I')(t)  # Current as a function of time
+
+# Define the nonlinear relationship (example: V = I^2 + 3*I + 2)
+nonlinear_eq = sp.Eq(V, I**2 + 3*I + 2)
+
+# Solve for I in terms of V
+I_solution = sp.solve(nonlinear_eq, I)
+
+# Define the transfer function H(s) = V(s) / I(s)
+s = sp.symbols('s')
+V_s = sp.laplace_transform(V, t, s)[0]
+I_s = sp.laplace_transform(I_solution[0], t, s)[0]
+
+# Calculate the transfer function
+H_s = V_s / I_s
+
+# Simplify the transfer function
+H_s_simplified = sp.simplify(H_s)
+
+# Display the transfer function
+H_s_simplified
+
+# Representing an electrical network using a circuit diagram (textual representation)
+network_representation = """
+Electrical Network Representation:
+-----------------------------------
+1. Voltage Source (V)
+2. Resistor (R)
+3. Capacitor (C)
+4. Inductor (L)
+5. Nonlinear components (e.g., diodes, transistors)
+
+Connections:
+- Voltage source connects to the resistor (R1)
+- Resistor (R1) connects to the capacitor (C1)
+- Capacitor (C1) connects to the inductor (L1)
+- Inductor (L1) connects back to the voltage source
+- Nonlinear components can be placed in parallel or series with the above components
+
+Circuit Analysis can be performed using:
+- Kirchhoff's Laws
+- Nodal Analysis
+- Mesh Analysis
+- Laplace Transform for dynamic analysis
+"""
+print(network_representation)
