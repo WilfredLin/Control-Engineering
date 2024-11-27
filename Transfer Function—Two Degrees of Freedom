@@ -1,0 +1,32 @@
+import sympy as sp
+
+# Define the variables
+m1, m2, b1, b2, k1, k2 = sp.symbols('m1 m2 b1 b2 k1 k2')  # Masses, damping coefficients, spring constants
+s = sp.symbols('s')  # Laplace variable
+F1, F2 = sp.symbols('F1 F2')  # Force inputs
+
+# Define the equations of motion for a two degrees of freedom system
+# m1 * d^2x1/dt^2 + b1 * dx1/dt + k1 * x1 + k2 * (x1 - x2) = F1
+# m2 * d^2x2/dt^2 + b2 * dx2/dt + k2 * (x2 - x1) = F2
+
+# In Laplace transform:
+# m1 * s^2 * X1(s) + b1 * s * X1(s) + k1 * X1(s) + k2 * (X1(s) - X2(s)) = F1(s)
+# m2 * s^2 * X2(s) + b2 * s * X2(s) + k2 * (X2(s) - X1(s)) = F2(s)
+
+X1 = sp.Function('X1')(s)
+X2 = sp.Function('X2')(s)
+
+equation1 = sp.Eq(m1 * s**2 * X1 + b1 * s * X1 + k1 * X1 + k2 * (X1 - X2), F1)
+equation2 = sp.Eq(m2 * s**2 * X2 + b2 * s * X2 + k2 * (X2 - X1), F2)
+
+# Solve the equations for X1 and X2
+solution = sp.solve((equation1, equation2), (X1, X2))
+
+# Display the transfer functions H1(s) = X1(s)/F1(s) and H2(s) = X2(s)/F2(s)
+H1 = solution[X1] / F1
+H2 = solution[X2] / F2
+
+print('Transfer Function H1(s) for the First Mass:')
+print(H1)
+print('Transfer Function H2(s) for the Second Mass:')
+print(H2)
