@@ -1,0 +1,51 @@
+import sympy as sp
+
+# Define the variable and function
+t = sp.symbols('t')
+s = sp.symbols('s')
+y = sp.Function('y')(t)
+
+# Define the components for the first loop
+R1_1, R2_1, C1 = sp.symbols('R1_1 R2_1 C1')
+Z1_1 = R1_1
+Z2_1 = 1/(s * C1)
+
+# Voltage division for the first loop
+V_in_1 = sp.symbols('V_in_1')
+V_out_1 = V_in_1 * (Z2_1 / (Z1_1 + Z2_1))
+
+# Transfer function for the first loop
+H_s1 = sp.simplify(V_out_1 / V_in_1)
+
+# Define the components for the second loop
+R1_2, R2_2, C2 = sp.symbols('R1_2 R2_2 C2')
+Z1_2 = R1_2
+Z2_2 = 1/(s * C2)
+
+# Voltage division for the second loop
+V_in_2 = sp.symbols('V_in_2')
+V_out_2 = V_in_2 * (Z2_2 / (Z1_2 + Z2_2))
+
+# Transfer function for the second loop
+H_s2 = sp.simplify(V_out_2 / V_in_2)
+
+# Define the feedback loop
+H_feedback = sp.symbols('H_feedback')
+
+# Overall transfer function considering feedback
+H_s_total = H_s1 / (1 + H_feedback * H_s1)
+
+# Display the Transfer Functions
+print('Transfer Function H(s) for Loop 1:', H_s1)
+print('Transfer Function H(s) for Loop 2:', H_s2)
+print('Overall Transfer Function with Feedback H(s):', H_s_total)
+
+# Define the inverse Laplace Transform to find the system response
+system_response_1 = sp.inverse_laplace_transform(H_s1, s, t)
+system_response_2 = sp.inverse_laplace_transform(H_s2, s, t)
+system_response_total = sp.inverse_laplace_transform(H_s_total, s, t)
+
+# Display the system responses
+print('System Response for Loop 1:', system_response_1)
+print('System Response for Loop 2:', system_response_2)
+print('Overall System Response with Feedback:', system_response_total)
