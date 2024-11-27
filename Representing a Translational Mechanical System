@@ -1,0 +1,54 @@
+import sympy as sp
+
+# Define the variables
+t = sp.symbols('t')
+x = sp.Function('x')(t)  # Displacement as a function of time
+F = sp.Function('F')(t)  # Applied force as a function of time
+m = sp.symbols('m')  # Mass
+k = sp.symbols('k')  # Spring constant
+b = sp.symbols('b')  # Damping coefficient
+
+# Define the equation of motion (Newton's second law)
+# m * d^2x/dt^2 + b * dx/dt + k * x = F
+d2x_dt2 = sp.Derivative(x, t, 2)
+dx_dt = sp.Derivative(x, t)
+equation_of_motion = sp.Eq(m * d2x_dt2 + b * dx_dt + k * x, F)
+
+# Solve for F in terms of x
+F_solution = sp.solve(equation_of_motion, F)
+
+# Define the transfer function H(s) = X(s) / F(s)
+s = sp.symbols('s')
+X_s = sp.laplace_transform(x, t, s)[0]
+F_s = sp.laplace_transform(F_solution[0], t, s)[0]
+
+# Calculate the transfer function
+H_s = X_s / F_s
+
+# Simplify the transfer function
+H_s_simplified = sp.simplify(H_s)
+
+# Display the transfer function
+H_s_simplified
+
+# Representing a translational mechanical system using a diagram (textual representation)
+mechanical_system_representation = """
+Translational Mechanical System Representation:
+----------------------------------------------
+1. Mass (m)
+2. Spring (k)
+3. Damper (b)
+4. Applied Force (F)
+
+Connections:
+- The mass (m) is connected to the spring (k) and damper (b).
+- The spring is attached to a fixed point and the mass.
+- The damper is also connected between the mass and the fixed point.
+- An external force (F) is applied to the mass.
+
+System Analysis can be performed using:
+- Newton's Laws of Motion
+- Free Body Diagrams
+- Laplace Transform for dynamic analysis
+"""
+print(mechanical_system_representation)
