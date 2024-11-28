@@ -1,0 +1,41 @@
+import sympy as sp
+
+# Define the variable for pole location
+s_real, s_imag = sp.symbols('s_real s_imag')  # Real and imaginary parts of the pole
+
+# Define the function to calculate performance metrics from pole location
+def performance_metrics_from_pole(s_real_value, s_imag_value):
+    # Calculate the natural frequency (omega_n) and damping ratio (zeta)
+    omega_n = sp.sqrt(s_real_value**2 + s_imag_value**2)  # Natural frequency
+    zeta = -s_real_value / omega_n  # Damping ratio
+
+    # Calculate the peak time (Tp)
+    Tp = sp.pi / (omega_n * sp.sqrt(1 - zeta**2))  # Peak time formula
+
+    # Calculate the percent overshoot (%OS)
+    OS = sp.exp((-zeta * sp.pi) / sp.sqrt(1 - zeta**2)) * 100  # Percent overshoot formula
+
+    # Calculate the settling time (Ts)
+    Ts = 4 / (zeta * omega_n)  # Settling time formula
+
+    return Tp, OS, Ts
+
+# Example usage
+s_real_value = -0.5  # Example real part of the pole
+s_imag_value = 1.5   # Example imaginary part of the pole
+Tp, OS, Ts = performance_metrics_from_pole(s_real_value, s_imag_value)
+
+# Display the results
+results = f"""
+Performance Metrics Based on Pole Location:
+-------------------------------------------------------------------------------
+Real Part of Pole (σ): {s_real_value}
+Imaginary Part of Pole (jω): {s_imag_value}
+Natural Frequency (ω_n): {sp.sqrt(s_real_value**2 + s_imag_value**2)}
+Damping Ratio (ζ): {-s_real_value / sp.sqrt(s_real_value**2 + s_imag_value**2)}
+Peak Time (T_p): {Tp}
+Percent Overshoot (%OS): {OS}
+Settling Time (T_s): {Ts}
+"""
+
+print(results)
