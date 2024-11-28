@@ -1,0 +1,68 @@
+import numpy as np
+from scipy.linalg import eig
+import matplotlib.pyplot as plt
+
+def state_space_stability(A):
+    """
+    Determine the stability of a system given its state-space representation.
+    
+    Parameters:
+    A (numpy.ndarray): The state matrix of the system.
+    
+    Returns:
+    str: Stability result of the system.
+    """
+    eigenvalues = eig(A)[0]
+
+    if np.all(np.real(eigenvalues) < 0):
+        return "The system is stable."
+    elif np.any(np.real(eigenvalues) > 0):
+        return "The system is unstable."
+    else:
+        return "The system is marginally stable."
+
+def design_gain(A, desired_eigenvalues):
+    """
+    Design a gain matrix K to place the eigenvalues of the closed-loop system at desired locations.
+    
+    Parameters:
+    A (numpy.ndarray): The state matrix of the system.
+    desired_eigenvalues (list): The desired eigenvalues for the closed-loop system.
+    
+    Returns:
+    numpy.ndarray: The gain matrix K.
+    """
+    # Placeholder for gain design, using pole placement method
+    # This is a simplistic approach and may not work for all systems
+    from scipy.signal import place_poles
+
+    # Create a dummy B matrix for control input
+    B = np.eye(A.shape[0])  # Identity matrix as input matrix
+    K = place_poles(A, B, desired_eigenvalues).gain_matrix
+    return K
+
+# Example usage:
+A = np.array([[0, 1], [-2, -3]])  # Example state matrix
+stability_result = state_space_stability(A)
+print(stability_result)
+
+# Design gain to place poles at desired locations
+desired_eigenvalues = [-1, -2]  # Desired closed-loop poles
+K = design_gain(A, desired_eigenvalues)
+print("Gain matrix K:", K)
+
+# Closed-loop system matrix
+A_cl = A - np.dot(K, np.eye(A.shape[0]))
+stability_result_cl = state_space_stability(A_cl)
+print("Closed-loop system stability:", stability_result_cl)
+
+# Plotting the eigenvalues
+eigenvalues_cl = eig(A_cl)[0]
+plt.scatter(np.real(eigenvalues_cl), np.imag(eigenvalues_cl), color='red')
+plt.axhline(0, color='black', lw=0.5, ls='--')
+plt.axvline(0, color='black', lw=0.5, ls='--')
+plt.title('Closed-loop Eigenvalues')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.grid()
+plt.show()
