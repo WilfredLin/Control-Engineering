@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the transfer function for a system with one integration
+def transfer_function(s):
+    return 1 / (s * (1 + 2 * s + 1))  # Example: 1/(s^2 + 2s + 1)
+
+# Define the steady-state error for a unit step input
+# Steady-state error for type 1 system is given by e_ss = 1 / (1 + Kp)
+def steady_state_error(Kp):
+    return 1 / (1 + Kp)
+
+# Define the gain Kp
+Kp = 1  # Proportional gain
+
+# Calculate steady-state error
+error = steady_state_error(Kp)
+print(f'Steady-State Error for Kp = {Kp}: {error}')  
+
+# Plot the response of the system
+time = np.linspace(0, 10, 100)
+input_signal = np.ones_like(time)  # Unit step input
+output_signal = np.array([transfer_function(1j * t) for t in time])  # System response
+
+plt.plot(time, np.real(output_signal), label='System Response')
+plt.title('System Response with One Integration')
+plt.xlabel('Time (s)')
+plt.ylabel('Output')
+plt.axhline(y=error, color='r', linestyle='--', label='Steady-State Error')
+plt.legend()
+plt.grid()
+plt.show()
