@@ -1,0 +1,67 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the transfer function for a system with one integration
+def transfer_function(s):
+    return 1 / (s * (1 + 2 * s + 1))  # Example: 1/(s^2 + 2s + 1)
+
+# Define the steady-state error for a unit step input
+def steady_state_error(Kp):
+    return 1 / (1 + Kp)
+
+# Define the steady-state error for a unit ramp input
+def steady_state_error_ramp(Kv):
+    return 1 / Kv
+
+# Define the steady-state error for a unit parabolic input
+def steady_state_error_parabolic(Ka):
+    return 1 / Ka
+
+# Function to interpret steady-state error specifications
+def interpret_steady_state_error(Kp, Kv, Ka):
+    error_step = steady_state_error(Kp)
+    error_ramp = steady_state_error_ramp(Kv)
+    error_parabolic = steady_state_error_parabolic(Ka)
+    
+    print(f'Steady-State Error for Kp = {Kp}: {error_step}')  
+    print(f'Steady-State Error for Kv = {Kv}: {error_ramp}')  
+    print(f'Steady-State Error for Ka = {Ka}: {error_parabolic}')  
+
+    if error_step < 0.1:
+        print("The system has a good response for step inputs.")
+    else:
+        print("The system has a poor response for step inputs.")
+
+    if error_ramp < 0.1:
+        print("The system has a good response for ramp inputs.")
+    else:
+        print("The system has a poor response for ramp inputs.")
+
+    if error_parabolic < 0.1:
+        print("The system has a good response for parabolic inputs.")
+    else:
+        print("The system has a poor response for parabolic inputs.")
+
+# Define the gain Kp, Kv, and Ka
+Kp = 1  # Proportional gain
+Kv = 1  # Velocity constant
+Ka = 1  # Acceleration constant
+
+# Interpret steady-state errors
+interpret_steady_state_error(Kp, Kv, Ka)
+
+# Plot the response of the system
+time = np.linspace(0, 10, 100)
+input_signal = np.ones_like(time)  # Unit step input
+output_signal = np.array([transfer_function(1j * t) for t in time])  # System response
+
+plt.plot(time, np.real(output_signal), label='System Response')
+plt.title('System Response with One Integration')
+plt.xlabel('Time (s)')
+plt.ylabel('Output')
+plt.axhline(y=steady_state_error(Kp), color='r', linestyle='--', label='Steady-State Error (Step)')
+plt.axhline(y=steady_state_error_ramp(Kv), color='g', linestyle='--', label='Steady-State Error (Ramp)')
+plt.axhline(y=steady_state_error_parabolic(Ka), color='b', linestyle='--', label='Steady-State Error (Parabolic)')
+plt.legend()
+plt.grid()
+plt.show()
