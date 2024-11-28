@@ -1,0 +1,25 @@
+import sympy as sp
+
+# Define the variables
+s = sp.symbols('s')
+K = sp.symbols('K')  # Constant term in the numerator
+num = K * s + 3  # Example numerator with a polynomial term (K*s + 3)
+den = s**2 + 2*s + 1  # Example denominator (can be modified)
+
+# Define the transfer function H(s) = num / den
+H_s = num / den
+
+# Simplify the transfer function
+H_s_simplified = sp.simplify(H_s)
+
+# Display the transfer function
+H_s_simplified
+
+# Representing the transfer function in a textual format
+transfer_function_representation = f"""
+Transfer Function Representation:
+-----------------------------------
+H(s) = {H_s_simplified}
+"""
+
+print(transfer_function_representation)
