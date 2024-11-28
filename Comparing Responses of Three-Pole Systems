@@ -1,0 +1,53 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variable for component parameters
+R, L, C = sp.symbols('R L C')  # Resistance, Inductance, Capacitance
+
+# Define the function to calculate transient response metrics for a three-pole system
+def transient_response_metrics(R_value, L_value, C_value):
+    # Calculate the natural frequency (omega_n) and damping ratio (zeta)
+    omega_n = 1 / sp.sqrt(L_value * C_value)  # Natural frequency
+    zeta = R_value / (2 * sp.sqrt(L_value / C_value))  # Damping ratio
+
+    # Calculate the time constant (tau)
+    tau = L_value / R_value  # Time constant for RL circuit
+
+    # Calculate the peak time (Tp)
+    Tp = sp.pi / (omega_n * sp.sqrt(1 - zeta**2))  # Peak time formula
+
+    # Calculate the percent overshoot (%OS)
+    OS = sp.exp((-zeta * sp.pi) / sp.sqrt(1 - zeta**2)) * 100  # Percent overshoot formula
+
+    # Calculate the settling time (Ts)
+    Ts = 4 / (zeta * omega_n)  # Settling time formula
+
+    return Tp, OS, Ts
+
+# Function to plot the responses of three-pole systems
+def plot_responses(R_values, L_values, C_values):
+    t = np.linspace(0, 5, 1000)  # Time vector for simulation
+    plt.figure(figsize=(10, 6))
+
+    for R_value, L_value, C_value in zip(R_values, L_values, C_values):
+        Tp, OS, Ts = transient_response_metrics(R_value, L_value, C_value)
+        
+        # Simulate the step response for the three-pole system
+        omega_n = 1 / np.sqrt(L_value * C_value)
+        zeta = R_value / (2 * np.sqrt(L_value / C_value))
+        
+        # Calculate the response
+        response = 1 - (1 / (1 + zeta * omega_n * t)) * np.exp(-zeta * omega_n * t) * np.sin(omega_n * np.sqrt(1 - zeta**2) * t)
+        
+        plt.plot(t, response, label=f'R={R_value}, L={L_value}, C={C_value}')
+
+    plt.title('Step Response of Three-Pole Systems')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Response')
+    plt.grid()
+    plt.legend()
+    plt.show()
+
+# Example usage with different R, L, C values
+R_values = [
