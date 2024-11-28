@@ -1,0 +1,46 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variable for component parameters
+R, L, C, s = sp.symbols('R L C s')  # Resistance, Inductance, Capacitance, and Laplace variable
+
+# Function to calculate the Laplace Transform of a given function
+def laplace_transform(func, t):
+    L = sp.laplace_transform(func, t, s, noconds=True)
+    return L
+
+# Function to find eigenvalues of a system represented by a matrix
+def eigenvalues(matrix):
+    eig_vals = sp.Eigenvals(matrix)
+    return eig_vals
+
+# Function to calculate poles of a transfer function
+def calculate_poles(numerator, denominator):
+    H = numerator / denominator
+    poles = sp.solve(sp.denom(H), s)
+    return poles
+
+# Example usage
+t = sp.symbols('t')
+# Define a function for Laplace Transform
+func = sp.exp(-R*t) * sp.sin(t)  # Sample function
+
+# Calculate Laplace Transform
+L_transform = laplace_transform(func, t)
+print(f'Laplace Transform of the function: L{{f(t)}} = {L_transform}')
+
+# Define a matrix for eigenvalue calculation
+matrix = sp.Matrix([[R, L], [1, 0]])
+
+# Calculate eigenvalues
+eig_vals = eigenvalues(matrix)
+print(f'Eigenvalues of the matrix: {eig_vals}')
+
+# Example coefficients for a transfer function
+numerator = sp.poly([1, 2], domain='ZZ')  # Example numerator coefficients
+denominator = sp.poly([1, 3, 2], domain='ZZ')  # Example denominator coefficients
+
+# Calculate poles
+poles = calculate_poles(numerator, denominator)
+print(f'Poles of the transfer function: {poles}')
