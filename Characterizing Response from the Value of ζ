@@ -1,0 +1,39 @@
+import sympy as sp
+
+# Define the variable for damping ratio
+zeta = sp.symbols('zeta')  # Damping ratio
+
+# Define the function to characterize the response based on ζ
+def characterize_response(zeta_value):
+    if zeta_value < 0:
+        response_type = "Underdamped"
+        description = "The system oscillates with increasing amplitude."
+    elif zeta_value == 0:
+        response_type = "Undamped"
+        description = "The system oscillates indefinitely with constant amplitude."
+    elif 0 < zeta_value < 1:
+        response_type = "Underdamped"
+        description = "The system oscillates with decreasing amplitude."
+    elif zeta_value == 1:
+        response_type = "Critically Damped"
+        description = "The system returns to equilibrium as quickly as possible without oscillating."
+    else:
+        response_type = "Overdamped"
+        description = "The system returns to equilibrium without oscillating, but slower than in critical damping."
+
+    return response_type, description
+
+# Example usage
+zeta_value = 0.5  # Example damping ratio
+response_type, description = characterize_response(zeta_value)
+
+# Display the results
+results = f"""
+Characterization of Response Based on Damping Ratio (ζ):
+---------------------------------------------------------
+Damping Ratio (ζ): {zeta_value}
+Response Type: {response_type}
+Description: {description}
+"""
+
+print(results)
