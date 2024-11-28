@@ -1,0 +1,61 @@
+import numpy as np
+
+def routh_hurwitz(coefficients):
+    n = len(coefficients) - 1
+    if n % 2 == 1:
+        coefficients.append(0)
+        n += 1
+
+    # Create the Routh array
+    routh_array = np.zeros((n // 2 + 1, n + 1))
+
+    # Fill the first two rows of the Routh array
+    routh_array[0, :len(coefficients[::2])] = coefficients[::2]
+    routh_array[1, :len(coefficients[1::2])] = coefficients[1::2]
+
+    # Check for zero rows and handle them
+    for i in range(2, n // 2 + 1):
+        if np.all(routh_array[i - 1] == 0):
+            routh_array[i - 1] = np.zeros(n + 1)  # Replace with a row of zeros
+            routh_array[i] = np.zeros(n + 1)  # Next row will also be zeros
+            continue
+        
+        for j in range(n - 1):
+            a = routh_array[i - 1, 0]
+            b = routh_array[i - 2, j + 1]
+            c = routh_array[i - 2, 0]
+            d = routh_array[i - 1, j + 1]
+            routh_array[i, j] = (a * b - c * d) / a if a != 0 else 0
+
+    return routh_array
+
+def stability_design(coefficients):
+    routh_array = routh_hurwitz(coefficients)
+    print("Routh-Hurwitz Array:")
+    print(routh_array)
+
+    # Count the number of sign changes in the first column
+    first_column = routh_array[:, 0]
+    sign_changes = np.sum(np.diff(np.sign(first_column)) != 0)
+
+    if sign_changes > 0:
+        print(f"The system is unstable. Number of poles in the right half-plane: {sign_changes}")
+    else:
+        print("The system is stable.")
+
+def factor_polynomial(coefficients):
+    # This function will factor the polynomial based on the Routh-Hurwitz criteria
+    routh_array = routh_hurwitz(coefficients)
+    factors = []
+
+    # Here you would implement the logic to extract factors from the Routh array
+    # This is a placeholder for the actual factor extraction logic
+    # In a real implementation, you would analyze the Routh array to find factors
+
+    return factors
+
+# Example usage:
+coefficients = [1, 0, 0, 2]  # Coefficients of the polynomial
+stability_design(coefficients)
+factors = factor_polynomial(coefficients)
+print("Factors of the polynomial:", factors)
