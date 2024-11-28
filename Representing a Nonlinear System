@@ -1,0 +1,22 @@
+import sympy as sp
+
+# Define the variables
+x = sp.symbols('x')
+u = sp.symbols('u')  # Input variable
+K = sp.symbols('K')  # Constant term
+
+# Define the nonlinear function f(x, u) = K * x**2 + 3 * u
+f = K * x**2 + 3 * u
+
+# Define the state-space representation for the nonlinear system
+# x_dot = f(x, u)
+x_dot = f
+
+# Display the nonlinear system representation
+nonlinear_system_representation = f"""
+Nonlinear System Representation:
+---------------------------------
+x_dot = {x_dot}
+"""
+
+print(nonlinear_system_representation)
