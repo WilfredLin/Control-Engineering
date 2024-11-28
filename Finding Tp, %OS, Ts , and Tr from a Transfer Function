@@ -1,0 +1,39 @@
+import sympy as sp
+
+# Define the variable for damping ratio and natural frequency
+zeta, omega_n = sp.symbols('zeta omega_n')  # Damping ratio and natural frequency
+
+# Define the function to calculate performance metrics from the transfer function
+def performance_metrics(zeta_value, omega_n_value):
+    # Calculate the settling time (Ts)
+    Ts = 4 / (zeta_value * omega_n_value)  # Settling time formula
+
+    # Calculate the peak time (Tp)
+    Tp = sp.pi / (omega_n_value * sp.sqrt(1 - zeta_value**2))  # Peak time formula
+
+    # Calculate the percent overshoot (%OS)
+    OS = sp.exp((-zeta_value * sp.pi) / sp.sqrt(1 - zeta_value**2)) * 100  # Percent overshoot formula
+
+    # Calculate the rise time (Tr)
+    Tr = (sp.pi - sp.acos(zeta_value)) / (omega_n_value * sp.sqrt(1 - zeta_value**2))  # Rise time formula
+
+    return Tp, OS, Ts, Tr
+
+# Example usage
+zeta_value = 0.5  # Example damping ratio
+omega_n_value = 2  # Example natural frequency (rad/s)
+Tp, OS, Ts, Tr = performance_metrics(zeta_value, omega_n_value)
+
+# Display the results
+results = f"""
+Performance Metrics Based on Damping Ratio (ζ) and Natural Frequency (ω_n):
+-------------------------------------------------------------------------------
+Damping Ratio (ζ): {zeta_value}
+Natural Frequency (ω_n): {omega_n_value} rad/s
+Peak Time (T_p): {Tp}
+Percent Overshoot (%OS): {OS}
+Settling Time (T_s): {Ts}
+Rise Time (T_r): {Tr}
+"""
+
+print(results)
