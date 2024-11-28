@@ -1,0 +1,56 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the system transfer function parameters: G(s) = K / (s^2 + 2*zeta*wn*s + wn^2)
+wn = 1.0  # Natural frequency
+zeta = 0.5  # Damping ratio
+K = 1.0  # Gain
+
+# Closed-loop transfer function: T(s) = G(s) / (1 + G(s)H)
+H = 1.0  # Feedback factor for unity feedback
+
+# Create the open-loop transfer function
+numerator = [K]
+denominator = [1, 2*zeta*wn, wn**2]
+G = signal.TransferFunction(numerator, denominator)
+
+# Create the closed-loop transfer function
+T = G / (1 + G * H)
+
+# Sensitivity function: S = dT/T / dK/K
+# For simplicity, we will compute the sensitivity with respect to K
+def sensitivity_closed_loop_transfer_function(K, wn, zeta):
+    # Calculate the closed-loop transfer function with the current gain K
+    G_current = signal.TransferFunction([K], [1, 2*zeta*wn, wn**2])
+    T_current = G_current / (1 + G_current * H)
+    
+    # Calculate the closed-loop transfer function with a small perturbation in K
+    K_perturbed = K + 0.01  # Small perturbation
+    G_perturbed = signal.TransferFunction([K_perturbed], [1, 2*zeta*wn, wn**2])
+    T_perturbed = G_perturbed / (1 + G_perturbed * H)
+    
+    # Sensitivity calculation
+    dT = T_perturbed - T_current
+    dK = K_perturbed - K
+    sensitivity = (dT / T_current) / (dK / K)
+    
+    return sensitivity
+
+# Calculate the sensitivity for the given parameters
+sensitivity_value = sensitivity_closed_loop_transfer_function(K, wn, zeta)
+
+# Print the result
+print(f'Sensitivity of the Closed-Loop Transfer Function with respect to K: {sensitivity_value:.4f}')
+
+# Plotting the closed-loop transfer function response
+time = np.linspace(0, 10, 1000)
+t, y = signal.step(T, T=time)
+
+plt.plot(t, y, label='Closed-Loop System Response')
+plt.title('Closed-Loop Transfer Function Response')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.legend()
+plt.grid()
+plt.show()
