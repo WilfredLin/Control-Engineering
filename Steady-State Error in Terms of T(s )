@@ -1,0 +1,23 @@
+# Steady-State Error Calculation in Terms of T(s)
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def steady_state_error(T, R):
+    # Steady-state error calculation for a given transfer function T(s) and reference input R(s)
+    # Assuming T is a transfer function in the form of a callable function
+    # R is the reference input (step input in this case)
+    steady_state_output = T(0)  # Output at steady state (s=0)
+    return R - steady_state_output
+
+# Example Transfer Function T(s)
+# For example, T(s) = 1 / (s + 1)
+def T(s):
+    return 1 / (s + 1)
+
+# Reference input (step input)
+R = 1  # Step input value
+
+# Calculate steady-state error
+error = steady_state_error(T, R)
+print(f'Steady-State Error: {error}')
