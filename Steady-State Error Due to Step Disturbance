@@ -1,0 +1,36 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the system transfer function: G(s) = K / (s^2 + 2*zeta*wn*s + wn^2)
+wn = 1.0  # Natural frequency
+zeta = 0.5  # Damping ratio
+K = 1.0  # Gain
+
+# Create a function to compute the steady-state error due to step disturbance
+def steady_state_error_disturbance(K, wn, zeta, d):
+    # The steady-state error for a unit step disturbance
+    ess = d / (K * wn**2)
+    return ess
+
+# Define the disturbance input
+disturbance = 1.0  # Step disturbance (magnitude)
+
+# Calculate the steady-state error for the given disturbance
+ess = steady_state_error_disturbance(K, wn, zeta, disturbance)
+
+# Print the result
+print(f'Steady-State Error due to step disturbance: {ess:.2f}')
+
+# Plotting the response of the system to the disturbance
+time = np.linspace(0, 10, 1000)
+t, y = signal.step(signal.TransferFunction([K], [1, 2*zeta*wn, wn**2]), T=time)
+
+plt.plot(t, y, label='System Response')
+plt.axhline(y=disturbance, color='r', linestyle='--', label='Disturbance Input')
+plt.title('System Response to Step Disturbance')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.legend()
+plt.grid()
+plt.show()
