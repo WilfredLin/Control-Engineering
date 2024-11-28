@@ -1,0 +1,26 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define system parameters
+K = 1  # Gain
+T = 1  # Time constant
+
+# Define the time vector
+t = np.linspace(0, 10, 100)
+
+# Define the ramp input
+ramp_input = t  # Ramp input: R(t) = t
+
+# Define the transfer function H(s) = K / (T*s + 1)
+# Calculate the steady-state error for a ramp input
+steady_state_error = (1 - K / T) * ramp_input
+
+# Plotting the results
+plt.figure(figsize=(10, 6))
+plt.plot(t, steady_state_error, label='Steady-State Error', color='blue')
+plt.title('Sensitivity of Steady-State Error with Ramp Input')
+plt.xlabel('Time (s)')
+plt.ylabel('Steady-State Error')
+plt.grid()
+plt.legend()
+plt.show()
