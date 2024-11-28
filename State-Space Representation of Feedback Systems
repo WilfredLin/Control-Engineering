@@ -1,0 +1,39 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variables for the state-space representation
+t = sp.symbols('t')  # Time variable
+
+# Function to create state-space representation
+def state_space_representation(A, B, C, D, u, t):
+    # A: state matrix
+    # B: input matrix
+    # C: output matrix
+    # D: feedthrough matrix
+    # u: input vector
+    # t: time variable
+    
+    # Define state variables
+    x = sp.Matrix(sp.symbols('x1 x2'))  # Adjust size based on system order
+    u_vector = sp.Matrix([u])
+    
+    # State equations
+    dx_dt = A * x + B * u_vector
+    y = C * x + D * u_vector
+    
+    return dx_dt, y
+
+# Example state-space matrices for a feedback system
+A = sp.Matrix([[0, 1], [-2, -3]])  # State matrix
+B = sp.Matrix([[0], [1]])           # Input matrix
+C = sp.Matrix([[1, 0]])             # Output matrix
+D = sp.Matrix([[0]])                 # Feedthrough matrix
+u = 1                                # Example input
+
+# Get the state equations and output
+dx_dt, y = state_space_representation(A, B, C, D, u, t)
+
+# Display the results
+print(f"The state equations are: {dx_dt}")
+print(f"The output is: {y}")
