@@ -1,0 +1,42 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variable for component parameters
+R, L, C, t = sp.symbols('R L C t')  # Resistance, Inductance, Capacitance, and time variable
+
+# Function to calculate the time domain response of an RLC circuit
+def time_domain_response(R, L, C, t, V0):
+    # Define the differential equation for the RLC circuit
+    # d^2i/dt^2 + (R/L) di/dt + (1/(L*C)) i = V0/L
+    i = sp.Function('i')(t)
+    eq = sp.Eq(sp.Derivative(i, t, 2) + (R/L) * sp.Derivative(i, t) + (1/(L*C)) * i, V0/L)
+    
+    # Solve the differential equation
+    solution = sp.dsolve(eq, i)
+    return solution
+
+# Example usage
+R_value = 1  # Resistance in ohms
+L_value = 1  # Inductance in henries
+C_value = 1  # Capacitance in farads
+V0_value = 1  # Initial voltage
+
+# Calculate the time domain response
+response = time_domain_response(R_value, L_value, C_value, t, V0_value)
+print(f'Time Domain Response: {response}')
+
+# Function to plot the time domain response
+def plot_response(response, t_range):
+    t_vals = np.linspace(t_range[0], t_range[1], 100)
+    i_vals = [response.subs(t, val).rhs.evalf() for val in t_vals]  # Evaluate the response
+
+    plt.plot(t_vals, i_vals)
+    plt.title('Time Domain Response of RLC Circuit')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Current (A)')
+    plt.grid()
+    plt.show()
+
+# Plot the response over a specified time range
+plot_response(response, (0, 10))
