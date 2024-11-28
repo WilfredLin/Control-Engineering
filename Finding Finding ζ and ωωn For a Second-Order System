@@ -1,0 +1,25 @@
+import sympy as sp
+
+# Define the variables
+K = sp.symbols('K')  # Constant term
+zeta = sp.symbols('zeta')  # Damping ratio
+omega_n = sp.symbols('omega_n')  # Natural frequency
+
+# Define the coefficients of the characteristic equation
+a2 = 1  # Coefficient of s^2
+a1 = 3  # Coefficient of s
+a0 = K  # Constant term
+
+# Calculate the damping ratio ζ and natural frequency ωn
+zeta = -a1 / (2 * sp.sqrt(a2 * a0))
+omega_n = sp.sqrt(a0)
+
+# Display the results
+results = f"""
+Damping Ratio (ζ) and Natural Frequency (ωn) for the Second-Order System:
+------------------------------------
+Damping Ratio (ζ): {zeta}
+Natural Frequency (ωn): {omega_n}
+"""
+
+print(results)
