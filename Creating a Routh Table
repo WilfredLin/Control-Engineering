@@ -1,0 +1,34 @@
+import sympy as sp
+import numpy as np
+
+# Function to create the Routh table
+def routh_table(coefficients):
+    n = len(coefficients)
+    routh = np.zeros((n, (n + 1) // 2))
+
+    # Fill the first two rows of the Routh table
+    routh[0, :len(coefficients[::2])] = coefficients[::2]
+    routh[1, :len(coefficients[1::2])] = coefficients[1::2]
+
+    # Calculate the remaining rows of the Routh table
+    for i in range(2, n):
+        for j in range(len(routh[i]) - 1):
+            # Calculate the determinant of the 2x2 matrix
+            a = routh[i - 1, 0]
+            b = routh[i - 2, j + 1]
+            c = routh[i - 1, j + 1]
+            d = routh[i - 2, 0]
+
+            if a == 0:
+                a = 1e-10  # Avoid division by zero
+            routh[i, j] = (a * b - c * d) / a
+
+    return routh
+
+# Example usage
+coefficients = [1, 6, 11, 6]  # Coefficients of the characteristic polynomial
+routh = routh_table(coefficients)
+
+# Print the Routh table
+print("Routh Table:")
+print(routh)
