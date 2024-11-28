@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Function to calculate stability via reverse coefficients
+
+def stability_reverse_coefficients(coefficients):
+    # Calculate reverse coefficients
+    reverse_coeffs = coefficients[::-1]
+    
+    # Calculate roots of the polynomial
+    roots = np.roots(reverse_coeffs)
+    
+    # Check stability
+    stable = all(np.abs(root) < 1 for root in roots)
+    return stable, roots
+
+# Example coefficients of a polynomial (e.g., x^3 + 2x^2 + 3x + 4)
+coefficients = [1, 2, 3, 4]
+
+# Check stability
+stable, roots = stability_reverse_coefficients(coefficients)
+
+# Print results
+if stable:
+    print("The system is stable.")
+else:
+    print("The system is unstable.")
+
+print("Roots of the polynomial:", roots)
+
+# Plotting the polynomial
+x = np.linspace(-2, 2, 400)
+poly = np.polyval(coefficients, x)
+plt.plot(x, poly)
+plt.axhline(0, color='black', lw=0.5)
+plt.axvline(0, color='black', lw=0.5)
+plt.title('Polynomial Stability Plot')
+plt.xlabel('x')
+plt.ylabel('P(x)')
+plt.grid()
+plt.show()
