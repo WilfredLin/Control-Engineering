@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the system transfer function: G(s) = K / (s^2 + 2*zeta*wn*s + wn^2)
+wn = 1.0  # Natural frequency
+zeta = 0.5  # Damping ratio
+K = 1.0  # Gain
+
+# Create a function to compute the steady-state error
+def steady_state_error(K, wn, zeta, r):
+    # The steady-state error for a unit step input
+    ess = r / (K * wn**2)
+    return ess
+
+# Define the desired steady-state error
+desired_ess = 0.1
+K_values = np.linspace(0.1, 10, 100)
+errors = []
+
+# Calculate the required gain K to meet the desired steady-state error
+for K in K_values:
+    ess = steady_state_error(K, wn, zeta, 1)  # r = 1 for unit step
+    errors.append(ess)
+
+# Find the minimum gain that meets the specification
+required_gain = K_values[np.where(np.array(errors) <= desired_ess)[0][0]]
+
+# Plot the results
+plt.plot(K_values, errors, label='Steady-State Error')
+plt.axhline(y=desired_ess, color='r', linestyle='--', label='Desired ESS')
+plt.axvline(x=required_gain, color='g', linestyle='--', label='Required Gain')
+plt.title('Gain Design to Meet Steady-State Error Specification')
+plt.xlabel('Gain (K)')
+plt.ylabel('Steady-State Error (ess)')
+plt.legend()
+plt.grid()
+plt.show()
+
+print(f'Required Gain to meet the desired steady-state error: {required_gain:.2f}')
