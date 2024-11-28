@@ -1,0 +1,64 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variables for the state-space representation
+t = sp.symbols('t')  # Time variable
+
+# Function to create state-space representation
+def state_space_representation(A, B, C, D, u, t):
+    # A: state matrix
+    # B: input matrix
+    # C: output matrix
+    # D: feedthrough matrix
+    # u: input vector
+    # t: time variable
+    
+    # Define state variables
+    x = sp.Matrix(sp.symbols('x1 x2'))  # Adjust size based on system order
+    u_vector = sp.Matrix([u])
+    
+    # State equations
+    dx_dt = A * x + B * u_vector
+    y = C * x + D * u_vector
+    
+    return dx_dt, y
+
+# Function for similarity transformation
+def similarity_transformation(A, B, C, T):
+    # A: original state matrix
+    # B: original input matrix
+    # C: original output matrix
+    # T: transformation matrix
+    
+    # Compute the transformed matrices
+    A_transformed = T.inv() * A * T
+    B_transformed = T.inv() * B
+    C_transformed = C * T
+    
+    return A_transformed, B_transformed, C_transformed
+
+# Function to find eigenvalues and eigenvectors
+def find_eigenvectors(A):
+    eigenvalues = A.eigenvals()
+    eigenvectors = A.eigenvects()
+    return eigenvalues, eigenvectors
+
+# Function to diagonalize a system
+def diagonalize_system(A, B, C):
+    eigenvalues, eigenvectors = find_eigenvectors(A)
+    
+    # Construct the transformation matrix from eigenvectors
+    T = sp.Matrix.hstack(*[vec[2][0] for vec in eigenvectors])  # Take the first eigenvector from each eigenvalue
+    
+    # Diagonalized state matrix
+    A_diagonal = T.inv() * A * T
+    
+    # Transformed input and output matrices
+    B_transformed = T.inv() * B
+    C_transformed = C * T
+    
+    return A_diagonal, B_transformed, C_transformed
+
+# Example state-space matrices for a feedback system
+A = sp.Matrix([[
