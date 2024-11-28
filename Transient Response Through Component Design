@@ -1,0 +1,46 @@
+import sympy as sp
+
+# Define the variable for component parameters
+R, L, C = sp.symbols('R L C')  # Resistance, Inductance, Capacitance
+
+# Define the function to calculate transient response metrics
+def transient_response_metrics(R_value, L_value, C_value):
+    # Calculate the natural frequency (omega_n) and damping ratio (zeta)
+    omega_n = 1 / sp.sqrt(L_value * C_value)  # Natural frequency
+    zeta = R_value / (2 * sp.sqrt(L_value / C_value))  # Damping ratio
+
+    # Calculate the time constant (tau)
+    tau = L_value / R_value  # Time constant for RL circuit
+
+    # Calculate the peak time (Tp)
+    Tp = sp.pi / (omega_n * sp.sqrt(1 - zeta**2))  # Peak time formula
+
+    # Calculate the percent overshoot (%OS)
+    OS = sp.exp((-zeta * sp.pi) / sp.sqrt(1 - zeta**2)) * 100  # Percent overshoot formula
+
+    # Calculate the settling time (Ts)
+    Ts = 4 / (zeta * omega_n)  # Settling time formula
+
+    return Tp, OS, Ts
+
+# Example usage
+R_value = 1.0  # Resistance in ohms
+L_value = 0.5  # Inductance in henries
+C_value = 0.1  # Capacitance in farads
+Tp, OS, Ts = transient_response_metrics(R_value, L_value, C_value)
+
+# Display the results
+results = f"""
+Transient Response Metrics Based on Component Design:
+-------------------------------------------------------------------------------
+Resistance (R): {R_value} Ω
+Inductance (L): {L_value} H
+Capacitance (C): {C_value} F
+Natural Frequency (ω_n): {1 / sp.sqrt(L_value * C_value)}
+Damping Ratio (ζ): {R_value / (2 * sp.sqrt(L_value / C_value))}
+Peak Time (T_p): {Tp}
+Percent Overshoot (%OS): {OS}
+Settling Time (T_s): {Ts}
+"""
+
+print(results)
