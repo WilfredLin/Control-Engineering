@@ -1,0 +1,35 @@
+import sympy as sp
+
+# Define the variables
+s = sp.symbols('s')  # Laplace variable
+K = sp.symbols('K')  # Constant term
+x0 = sp.symbols('x0')  # Initial condition
+
+# Define the transfer function G(s) = K / (s^2 + 3s + K)
+G = K / (s**2 + 3*s + K)
+
+# Define the poles of the system
+poles = sp.solve(sp.denom(G), s)
+
+# Check if the system is underdamped
+damping_ratio = 3 / (2 * sp.sqrt(K))
+is_underdamped = damping_ratio < 1
+
+# Evaluate the response using the poles if underdamped
+if is_underdamped:
+    omega_n = sp.sqrt(K)  # Natural frequency
+    omega_d = omega_n * sp.sqrt(1 - damping_ratio**2)  # Damped frequency
+    response = [sp.exp(-damping_ratio * omega_n * s) * sp.sin(omega_d * s) for pole in poles]
+else:
+    response = []
+
+# Display the poles and response
+evaluation_results = f"""
+Evaluation of Underdamped Response Using Poles:
+------------------------------------
+Poles: {poles}
+Is Underdamped: {is_underdamped}
+Response: {response}
+"""
+
+print(evaluation_results)
