@@ -1,0 +1,22 @@
+# Steady-State Error Calculation for Systems with No Integrations
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def steady_state_error_no_integration(T, R):
+    # Steady-state error calculation for a given transfer function T(s) 
+    # without any integrators in the system and reference input R(s)
+    steady_state_output = T(0)  # Output at steady state (s=0)
+    return R - steady_state_output
+
+# Example Transfer Function T(s) without integrators
+# For example, T(s) = 1 / (s + 1)
+def T(s):
+    return 1 / (s + 1)
+
+# Reference input (step input)
+R = 1  # Step input value
+
+# Calculate steady-state error
+error = steady_state_error_no_integration(T, R)
+print(f'Steady-State Error: {error}')
