@@ -1,0 +1,44 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variables for the state-space representation
+t, s = sp.symbols('t s')  # Time variable and Laplace variable
+A, B, C, D = sp.symbols('A B C D')  # System matrices
+
+# Function to calculate the State-Transition Matrix using Laplace Transform
+def state_transition_matrix(A):
+    I = sp.eye(A.shape[0])  # Identity matrix
+    return sp.simplify(sp.inverse(s * I - A))
+
+# Example usage
+A_matrix = sp.Matrix([[0, 1], [-1, -1]])  # Example A matrix
+Phi = state_transition_matrix(A_matrix)
+print(f'State-Transition Matrix: {Phi}')
+
+# Function to calculate the response using the State-Transition Matrix
+def response_using_state_transition(Phi, B, t):
+    return Phi * B * sp.exp(-t)
+
+# Example input for the response calculation
+B_matrix = sp.Matrix([[0], [1]])  # Example B matrix
+t_value = 1  # Time value
+
+# Calculate the response
+response = response_using_state_transition(Phi, B_matrix, t_value)
+print(f'Response at t={t_value}: {response}')
+
+# Function to plot the response over time
+def plot_response(response, t_range):
+    t_vals = np.linspace(t_range[0], t_range[1], 100)
+    response_vals = [response.subs(t, val).evalf() for val in t_vals]  # Evaluate the response
+
+    plt.plot(t_vals, response_vals)
+    plt.title('Response using State-Transition Matrix')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Response')
+    plt.grid()
+    plt.show()
+
+# Plot the response over a specified time range
+plot_response(response, (0, 10))
