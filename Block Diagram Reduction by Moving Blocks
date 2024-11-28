@@ -1,0 +1,60 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variables for the block diagram reduction
+s = sp.symbols('s')  # Laplace variable
+
+# Function to calculate the transfer function of a series connection
+def series_connection(G1, G2):
+    return G1 * G2
+
+# Function to calculate the transfer function of a parallel connection
+def parallel_connection(G1, G2):
+    return G1 + G2
+
+# Function to calculate the transfer function of a feedback loop
+def feedback_loop(G, H):
+    return G / (1 + G * H)
+
+# Function to move blocks in the block diagram
+def move_block(G, H):
+    # This function assumes that H is in feedback with G
+    return feedback_loop(G, H)
+
+# Example transfer functions
+G1 = 1 / (s + 2)  # First transfer function
+G2 = 1 / (s + 3)  # Second transfer function
+H = 1 / (s + 1)   # Feedback transfer function
+
+# Calculate the overall transfer function for different configurations
+# Series connection
+G_series = series_connection(G1, G2)
+print(f'Series Connection Transfer Function: {G_series}')
+
+# Parallel connection
+G_parallel = parallel_connection(G1, G2)
+print(f'Parallel Connection Transfer Function: {G_parallel}')
+
+# Feedback loop
+G_feedback = feedback_loop(G1, H)
+print(f'Feedback Loop Transfer Function: {G_feedback}')
+
+# Move block H to create a new feedback loop with G2
+G_new_feedback = move_block(G2, H)
+print(f'New Feedback Loop Transfer Function with G2: {G_new_feedback}')
+
+# Function to plot the step response of a transfer function
+def plot_step_response(G, t_range):
+    t_vals = np.linspace(t_range[0], t_range[1], 100)
+    response_vals = [sp.inverse_laplace(sp.expand(G)).subs(s, val).evalf() for val in t_vals]
+    
+    plt.plot(t_vals, response_vals)
+    plt.title('Step Response of the Transfer Function')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Response')
+    plt.grid()
+    plt.show()
+
+# Plot the step response for the feedback loop transfer function
+plot_step_response(G_feedback, (0, 10))
