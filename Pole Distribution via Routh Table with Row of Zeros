@@ -1,0 +1,48 @@
+import numpy as np
+
+# Function to create the Routh table
+def routh_table(coefficients):
+    n = len(coefficients)
+    routh = np.zeros((n, (n + 1) // 2))
+    
+    # Fill the first two rows of the Routh table
+    routh[0, :len(coefficients[::2])] = coefficients[::2]
+    routh[1, :len(coefficients[1::2])] = coefficients[1::2]
+
+    # Fill the rest of the Routh table
+    for i in range(2, n):
+        for j in range(len(routh[i - 1]) - 1):
+            if routh[i - 1, 0] == 0:  # Handle row of zeros
+                routh[i - 1, 0] = 1e-10  # Small value to avoid division by zero
+            routh[i, j] = ((routh[i - 1, 0] * routh[i - 2, j + 1]) - 
+                           (routh[i - 2, 0] * routh[i - 1, j + 1])) / routh[i - 1, 0]
+
+    return routh
+
+# Function to check stability using the Routh-Hurwitz criterion
+def stability_routh(coefficients):
+    routh = routh_table(coefficients)
+    # Count the number of sign changes in the first column
+    first_column = routh[:, 0]
+    sign_changes = np.sum(np.diff(np.sign(first_column)) != 0)
+    
+    return sign_changes == 0, routh
+
+# Function to display pole distribution
+def pole_distribution(coefficients):
+    stable, routh = stability_routh(coefficients)
+    
+    # Print stability result
+    if stable:
+        print("The system is stable.")
+    else:
+        print("The system is unstable.")
+
+    print("Routh Table:")
+    print(routh)
+
+# Example coefficients of a polynomial (e.g., x^4 + 2x^3 + 3x^2 + 0x + 5)
+coefficients = [1, 2, 3, 0, 5]
+
+# Display pole distribution
+pole_distribution(coefficients)
