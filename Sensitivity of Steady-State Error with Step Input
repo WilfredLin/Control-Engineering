@@ -1,0 +1,26 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define system parameters
+K = 1  # Gain
+T = 1  # Time constant
+
+# Define the time vector
+t = np.linspace(0, 10, 100)
+
+# Define the step input
+step_input = np.ones_like(t)  # Step input: R(t) = 1 for t >= 0
+
+# Define the transfer function H(s) = K / (T*s + 1)
+# Calculate the steady-state error for a step input
+steady_state_error = (1 - K) * step_input
+
+# Plotting the results
+plt.figure(figsize=(10, 6))
+plt.plot(t, steady_state_error, label='Steady-State Error', color='blue')
+plt.title('Sensitivity of Steady-State Error with Step Input')
+plt.xlabel('Time (s)')
+plt.ylabel('Steady-State Error')
+plt.grid()
+plt.legend()
+plt.show()
