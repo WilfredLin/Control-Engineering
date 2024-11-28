@@ -1,0 +1,28 @@
+import numpy as np
+from scipy.linalg import eig
+
+def state_space_stability(A):
+    """
+    Determine the stability of a system given its state-space representation.
+    
+    Parameters:
+    A (numpy.ndarray): The state matrix of the system.
+    
+    Returns:
+    str: Stability result of the system.
+    """
+    # Calculate the eigenvalues of the state matrix A
+    eigenvalues = eig(A)[0]
+
+    # Check the real parts of the eigenvalues
+    if np.all(np.real(eigenvalues) < 0):
+        return "The system is stable."
+    elif np.any(np.real(eigenvalues) > 0):
+        return "The system is unstable."
+    else:
+        return "The system is marginally stable."
+
+# Example usage:
+A = np.array([[0, 1], [-2, -3]])  # Example state matrix
+stability_result = state_space_stability(A)
+print(stability_result)
