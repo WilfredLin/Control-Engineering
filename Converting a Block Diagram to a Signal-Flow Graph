@@ -1,0 +1,43 @@
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the variables for the block diagram reduction
+s = sp.symbols('s')  # Laplace variable
+
+# Function to calculate the transfer function of a series connection
+def series_connection(G1, G2):
+    return G1 * G2
+
+# Function to calculate the transfer function of a parallel connection
+def parallel_connection(G1, G2):
+    return G1 + G2
+
+# Function to calculate the transfer function of a feedback loop
+def feedback_loop(G, H):
+    return G / (1 + G * H)
+
+# Function to convert a block diagram to a signal-flow graph
+def block_diagram_to_signal_flow(G1, G2, H, connection_type):
+    if connection_type == 'series':
+        G = series_connection(G1, G2)
+    elif connection_type == 'parallel':
+        G = parallel_connection(G1, G2)
+    elif connection_type == 'feedback':
+        G = feedback_loop(G1, H)
+    else:
+        raise ValueError("Invalid connection type. Choose 'series', 'parallel', or 'feedback'.")
+    
+    return G
+
+# Example transfer functions
+G1 = 1 / (s + 1)  # Transfer function for G1
+G2 = 1 / (s + 2)  # Transfer function for G2
+H = 1 / (s + 3)   # Transfer function for H
+
+# Example usage
+connection_type = 'series'  # Change to 'parallel' or 'feedback' as needed
+G = block_diagram_to_signal_flow(G1, G2, H, connection_type)
+
+# Display the resulting transfer function
+print(f"The transfer function for the {connection_type} connection is: {G}")
