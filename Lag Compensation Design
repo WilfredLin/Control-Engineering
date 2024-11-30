@@ -1,0 +1,42 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, step
+
+# System parameters for a first-order system
+K = 1.0  # Gain
+T = 1.0  # Time constant
+num = [K]  # Numerator of the transfer function
+den = [T, 1]  # Denominator of the transfer function
+
+# Lag compensator parameters
+Kc = 2.0  # Compensator gain
+T1 = 0.5  # Time constant of the compensator
+
+# Transfer function of the lag compensator
+num_comp = [Kc * T1, Kc]
+den_comp = [T1, 1]
+
+# Overall system transfer function
+num_overall = np.convolve(num, num_comp)
+den_overall = np.convolve(den, den_comp)
+
+# Create transfer function object
+system = TransferFunction(num_overall, den_overall)
+
+# Time vector for simulation
+t = np.linspace(0, 10, 100)
+
+# Compute step response
+t_out, y_out = step(system, T=t)
+
+# Plotting step response
+plt.figure(figsize=(10, 6))
+plt.plot(t_out, y_out, label='Step Response with Lag Compensation', color='green')
+plt.title('Lag Compensation Design - Step Response')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.axhline(0, color='black', linewidth=0.5, ls='--')
+plt.axvline(0, color='black', linewidth=0.5, ls='--')
+plt.grid()
+plt.legend()
+plt.show()
