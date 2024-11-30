@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import freqresp, TransferFunction
+
+# Define the numerator and denominator of the transfer function
+numerator = [1]  # Example: H(s) = 1
+ denominator = [1, 1]  # Example: H(s) = 1/(s+1)
+
+# Create a transfer function
+system = TransferFunction(numerator, denominator)
+
+# Generate frequency response data
+w, h = freqresp(system)
+
+# Plot the frequency response
+plt.figure(figsize=(10, 6))
+plt.plot(w, 20 * np.log10(abs(h)), label='Magnitude (dB)')
+plt.plot(w, np.angle(h), label='Phase (radians)')
+plt.title('Frequency Response from Transfer Function')
+plt.xlabel('Frequency (rad/s)')
+plt.ylabel('Magnitude (dB) / Phase (radians)')
+plt.grid()
+plt.legend()
+plt.show()
