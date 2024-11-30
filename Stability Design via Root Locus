@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+def plot_root_locus(num, den):
+    # Create a transfer function system
+    system = signal.TransferFunction(num, den)
+
+    # Generate the root locus
+    rlist, klist = signal.root_locus(system, Plot=True)
+
+    plt.title('Root Locus')
+    plt.xlabel('Real Axis')
+    plt.ylabel('Imaginary Axis')
+    plt.grid()
+    plt.axhline(0, color='black', lw=0.5, ls='--')
+    plt.axvline(0, color='black', lw=0.5, ls='--')
+    plt.show()
+
+# Example usage
+num = [1]  # Numerator coefficients of the transfer function
+den = [1, 2, 1]  # Denominator coefficients of the transfer function
+
+plot_root_locus(num, den)
