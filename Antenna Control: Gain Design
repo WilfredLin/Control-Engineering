@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Antenna:
+    def __init__(self, frequency, gain_db):
+        self.frequency = frequency  # in GHz
+        self.gain_db = gain_db  # in dB
+
+    def gain_linear(self):
+        return 10 ** (self.gain_db / 10)
+
+    def effective_aperture(self):
+        c = 3e8  # speed of light in m/s
+        wavelength = c / (self.frequency * 1e9)  # wavelength in meters
+        return (self.gain_linear() * wavelength ** 2) / (4 * np.pi)
+
+    def plot_gain_vs_frequency(self, frequency_range):
+        gains = [Antenna(f, self.gain_db).gain_linear() for f in frequency_range]
+        plt.plot(frequency_range, gains)
+        plt.title('Gain vs Frequency')
+        plt.xlabel('Frequency (GHz)')
+        plt.ylabel('Gain (Linear)')
+        plt.grid()
+        plt.show()
+
+if __name__ == '__main__':
+    frequency = 2.4  # GHz
+    gain_db = 10  # dB
+    antenna = Antenna(frequency, gain_db)
+    print(f'Effective Aperture: {antenna.effective_aperture()} m^2')
+
+    frequency_range = np.linspace(1, 5, 100)  # 1 GHz to 5 GHz
+    antenna.plot_gain_vs_frequency(frequency_range)
