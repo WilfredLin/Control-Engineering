@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the lag-lead compensator parameters
+K = 10  # Gain
+T1 = 0.1  # Zero for lead compensator
+T2 = 0.01  # Pole for lead compensator
+T3 = 1.0  # Time constant for lag compensator
+K_lag = 0.5  # Gain for lag compensator
+
+# Create the transfer function for the lead compensator
+num_lead = [K * T1, K]  # Numerator coefficients for lead compensator
+den_lead = [T2, 1]  # Denominator coefficients for lead compensator
+lead_compensator = signal.TransferFunction(num_lead, den_lead)
+
+# Create the transfer function for the lag compensator
+num_lag = [K_lag]  # Numerator coefficients for lag compensator
+den_lag = [T3, 1]  # Denominator coefficients for lag compensator
+lag_compensator = signal.TransferFunction(num_lag, den_lag)
+
+# Combine the lead and lag compensators
+combined_num = np.convolve(num_lead, num_lag)
+combined_den = np.convolve(den_lead, den_lag)
+combined_compensator = signal.TransferFunction(combined_num, combined_den)
+
+# Generate a time vector
+t = np.linspace(0, 10, 1000)
+
+# Step response of the combined compensator
+t, y = signal.step(combined_compensator, T=t)
+
+# Plot the step response
+plt.figure()
+plt.plot(t, y)
+plt.title('Step Response of Lag-Lead Compensator')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.grid()
+plt.show()
