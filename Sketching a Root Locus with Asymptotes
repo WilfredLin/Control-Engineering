@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import root_locus, TransferFunction
+
+# Define the transfer function
+num = [1]  # Numerator coefficients
+den = [1, 3, 2]  # Denominator coefficients (s^2 + 3s + 2)
+system = TransferFunction(num, den)
+
+# Generate root locus data
+rlist, klist = root_locus(system, Plot=False)
+
+# Plot the root locus
+plt.figure(figsize=(10, 6))
+for r in rlist:
+    plt.plot(r.real, r.imag, 'b')
+    plt.plot(r.real, -r.imag, 'b')  # Mirror for negative imaginary axis
+
+# Calculate asymptotes
+num_poles = len(system.den) - 1
+num_zeros = len(system.num) - 1
+num_asymptotes = num_poles - num_zeros
+
+# Asymptote angles
+angles = np.linspace(0, 2 * np.pi, num_asymptotes, endpoint=False)
+for angle in angles:
+    plt.plot([0, np.cos(angle) * 10], [0, np.sin(angle) * 10], 'r--')
+
+# Set plot limits and labels
+plt.xlim(-5, 5)
+plt.ylim(-5, 5)
+plt.axhline(0, color='black', lw=0.5, ls='--')
+plt.axvline(0, color='black', lw=0.5, ls='--')
+plt.title('Root Locus with Asymptotes')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.grid()
+plt.gca().set_aspect('equal', adjustable='box')
+plt.show()
