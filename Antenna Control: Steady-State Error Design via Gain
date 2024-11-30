@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the system transfer function G(s) = K / (s^2 + 2s + K)
+K = 10  # Gain value
+num = [K]
+den = [1, 2, K]
+G = np.poly1d(num) / np.poly1d(den)
+
+# Define the input signal (step input)
+T = np.linspace(0, 10, 100)
+R = np.ones_like(T)
+
+# Compute the output using the input substitution method
+Y = np.zeros_like(T)
+for i in range(1, len(T)):
+    dt = T[i] - T[i-1]
+    Y[i] = Y[i-1] + dt * (G(0) * R[i] - Y[i-1])
+
+# Steady-State Error Calculation
+steady_state_error = R[-1] - Y[-1]
+
+# Plotting the results
+plt.plot(T, R, label='Input (R)', linestyle='--')
+plt.plot(T, Y, label='Output (Y)')
+plt.title('Steady-State Error in Antenna Control via Gain')
+plt.xlabel('Time (s)')
+plt.ylabel('Amplitude')
+plt.axhline(y=steady_state_error, color='r', linestyle=':', label='Steady-State Error')
+plt.legend()
+plt.grid()
+plt.show()
+
+# Print the steady-state error
+print(f'Steady-State Error: {steady_state_error}')
