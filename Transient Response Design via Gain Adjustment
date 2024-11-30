@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# System parameters
+K = 1.0  # Gain
+T = 1.0  # Time constant
+
+# Time vector
+t = np.linspace(0, 10, 100)
+
+# Step response function
+def step_response(t, K, T):
+    return K * (1 - np.exp(-t / T))
+
+# Gain adjustment function
+def adjust_gain(new_gain):
+    global K
+    K = new_gain
+
+# Initial response
+y_initial = step_response(t, K, T)
+
+# Plotting initial response
+plt.figure(figsize=(10, 6))
+plt.plot(t, y_initial, label='Initial Response', color='blue')
+plt.title('Step Response of First-Order System')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.axhline(0, color='black',linewidth=0.5, ls='--')
+plt.axvline(0, color='black',linewidth=0.5, ls='--')
+plt.grid()
+plt.legend()
+
+# Adjust gain and plot new response
+adjust_gain(2.0)  # Change gain to 2.0
+
+y_new = step_response(t, K, T)
+plt.plot(t, y_new, label='New Response (K=2.0)', color='red')
+plt.legend()
+plt.show()
