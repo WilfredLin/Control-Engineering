@@ -1,0 +1,16 @@
+import sympy as sp
+
+# Define the variable and the function
+n = sp.symbols('n', integer=True)
+
+# Define the time function (example: x[n] = a^n * u[n])
+a = sp.symbols('a')
+x_n = a**n * sp.Heaviside(n)
+
+# Compute the Z-transform
+z = sp.symbols('z')
+X_z = sp.summation(x_n * z**(-n), (n, 0, sp.oo))
+
+# Display the result
+X_z_simplified = sp.simplify(X_z)
+X_z_simplified
