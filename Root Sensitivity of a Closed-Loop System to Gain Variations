@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, root_locus
+
+# Define the closed-loop transfer function for a positive-feedback system
+# Example: G(s) = K / (s^3 + 2s^2 + 3s + K)
+K = 1  # Initial Gain
+num = [K]  # Numerator coefficients
+den = [1, 2, 3, K]  # Denominator coefficients (s^3 + 2s^2 + 3s + K)
+system = TransferFunction(num, den)
+
+# Function to calculate the root sensitivity with respect to gain variations
+def root_sensitivity(system, gain_variations):
+    sensitivities = []
+    for K in gain_variations:
+        system.K = K  # Update the gain
+        poles = system.pole()
+        sensitivities.append(np.real(poles))
+    return sensitivities
+
+# Define gain variations
+gain_variations = np.linspace(0.1, 5, 50)
+
+# Calculate root sensitivities
+sensitivities = root_sensitivity(system, gain_variations)
+
+# Plotting the root sensitivity
+plt.figure(figsize=(10, 6))
+for i in range(len(sensitivities[0])):
+    plt.plot(gain_variations, [s[i] for s in sensitivities], label=f'Pole {i+1}')
+
+plt.title('Root Sensitivity of Closed-Loop System to Gain Variations')
+plt.xlabel('Gain (K)')
+plt.ylabel('Real Part of Poles')
+plt.axhline(0, color='black', lw=0.5, ls='--')
+plt.grid()
+plt.legend()
+plt.show()
