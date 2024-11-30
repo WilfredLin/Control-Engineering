@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, bode
+
+# Define the transfer function parameters
+K_values = np.linspace(0, 10, num=100)  # Gain values
+num = [1]  # Numerator coefficients
+den = [1, 2, 1]  # Denominator coefficients (s^2 + 2s + 1)
+
+# Prepare to store stability margins
+gain_margin = []
+phase_margin = []
+
+for K in K_values:
+    # Define the transfer function with gain K
+    system = TransferFunction([K * n for n in num], den)
+    w, mag, phase = bode(system)
+    gain_margin.append(mag[-1])  # Last magnitude value
+    phase_margin.append(phase[-1])  # Last phase value
+
+# Plotting the results
+plt.figure(figsize=(12, 6))
+plt.subplot(2, 1, 1)
+plt.plot(K_values, gain_margin, label='Gain Margin')
+plt.title('Gain Margin vs Gain (K)')
+plt.xlabel('Gain (K)')
+plt.ylabel('Gain Margin (dB)')
+plt.grid()
+plt.legend()
+
+plt.subplot(2, 1, 2)
+plt.plot(K_values, phase_margin, label='Phase Margin', color='orange')
+plt.title('Phase Margin vs Gain (K)')
+plt.xlabel('Gain (K)')
+plt.ylabel('Phase Margin (degrees)')
+plt.grid()
+plt.legend()
+
+plt.tight_layout()
+plt.show()
