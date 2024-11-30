@@ -1,0 +1,21 @@
+import numpy as np
+import control
+
+# Define the system parameters
+A = np.array([[0, 1], [-2, -3]])  # State matrix
+B = np.array([[0], [1]])           # Input matrix
+C = np.array([[1, 0]])             # Output matrix
+D = np.array([[0]])                 # Feedforward matrix
+
+# Create state-space system
+sys = control.ss(A, B, C, D)
+
+# Define desired poles for controller design
+desired_poles = np.array([-1, -2])
+
+# Calculate the state feedback gain matrix K using pole placement
+K = control.place(sys.A, sys.B, desired_poles)
+
+# Display the state feedback gain matrix
+print("State Feedback Gain Matrix K:")
+print(K)
