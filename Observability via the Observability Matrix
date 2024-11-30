@@ -1,0 +1,59 @@
+class Observer:
+    def update(self, message):
+        pass
+
+class ConcreteObserverA(Observer):
+    def update(self, message):
+        print(f'ConcreteObserverA received: {message}')
+
+class ConcreteObserverB(Observer):
+    def update(self, message):
+        print(f'ConcreteObserverB received: {message}')
+
+class Subject:
+    def __init__(self):
+        self._observers = []
+
+    def attach(self, observer):
+        self._observers.append(observer)
+
+    def detach(self, observer):
+        self._observers.remove(observer)
+
+    def notify(self, message):
+        for observer in self._observers:
+            observer.update(message)
+
+class ObservabilityMatrix:
+    def __init__(self):
+        self.matrix = {}
+
+    def add_observer(self, observer_name):
+        self.matrix[observer_name] = []
+
+    def record_event(self, observer_name, event):
+        if observer_name in self.matrix:
+            self.matrix[observer_name].append(event)
+
+    def display_matrix(self):
+        for observer, events in self.matrix.items():
+            print(f'{observer}: {events}')
+
+# Example usage
+if __name__ == '__main__':
+    subject = Subject()
+    observer_a = ConcreteObserverA()
+    observer_b = ConcreteObserverB()
+
+    subject.attach(observer_a)
+    subject.attach(observer_b)
+
+    observability_matrix = ObservabilityMatrix()
+    observability_matrix.add_observer('ConcreteObserverA')
+    observability_matrix.add_observer('ConcreteObserverB')
+
+    subject.notify('Hello Observers!')
+    observability_matrix.record_event('ConcreteObserverA', 'Received Hello Observers!')
+    observability_matrix.record_event('ConcreteObserverB', 'Received Hello Observers!')
+
+    observability_matrix.display_matrix()
