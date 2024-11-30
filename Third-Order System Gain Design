@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, root_locus
+
+# Define the third-order transfer function
+# Example: G(s) = K / (s^3 + 2s^2 + 3s + K)
+K = 1  # Gain
+num = [K]  # Numerator coefficients
+den = [1, 2, 3, K]  # Denominator coefficients (s^3 + 2s^2 + 3s + K)
+system = TransferFunction(num, den)
+
+# Function to find critical points (poles and zeros)
+def critical_points(system):
+    poles = system.pole()
+    zeros = system.zero()
+    return poles, zeros
+
+# Calculate critical points
+poles, zeros = critical_points(system)
+
+# Plotting the root locus
+plt.figure(figsize=(8, 6))
+rlist, klist = root_locus(system, Plot=True)
+
+# Plot the poles and zeros
+plt.scatter(np.real(poles), np.imag(poles), color='red', label='Poles', marker='x')
+plt.scatter(np.real(zeros), np.imag(zeros), color='blue', label='Zeros', marker='o')
+plt.axhline(0, color='black', lw=0.5, ls='--')
+plt.axvline(0, color='black', lw=0.5, ls='--')
+plt.title('Root Locus of Third-Order System')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.grid()
+plt.legend()
+plt.xlim(-5, 2)
+plt.ylim(-3, 3)
+plt.show()
+
+# Print critical points
+for i, pole in enumerate(poles):
+    print(f"Pole {i+1}: {pole}")
+for i, zero in enumerate(zeros):
+    print(f"Zero {i+1}: {zero}")
