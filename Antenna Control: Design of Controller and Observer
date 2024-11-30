@@ -1,0 +1,56 @@
+class AntennaController:
+    def __init__(self, setpoint, K_p, K_i, K_d):
+        self.setpoint = setpoint
+        self.K_p = K_p
+        self.K_i = K_i
+        self.K_d = K_d
+        self.integral = 0
+        self.previous_error = 0
+
+    def update(self, measurement, dt):
+        error = self.setpoint - measurement
+        self.integral += error * dt
+        derivative = (error - self.previous_error) / dt
+        control_signal = (self.K_p * error) + (self.K_i * self.integral) + (self.K_d * derivative)
+        self.previous_error = error
+        return control_signal
+
+
+class AntennaObserver:
+    def __init__(self):
+        self.state_estimate = 0
+
+    def update(self, measurement):
+        # Simple observer logic (e.g., a Kalman filter could be implemented here)
+        self.state_estimate = measurement  # For simplicity, we directly use the measurement
+        return self.state_estimate
+
+
+# Example usage
+if __name__ == '__main__':
+    import time
+
+    setpoint = 100  # Desired setpoint
+    K_p = 1.0      # Proportional gain
+    K_i = 0.1      # Integral gain
+    K_d = 0.01     # Derivative gain
+    controller = AntennaController(setpoint, K_p, K_i, K_d)
+    observer = AntennaObserver()
+
+    # Simulated process variable
+    measurement = 0
+
+    # Simulation loop
+    while True:
+        dt = 1  # Time step in seconds
+        control_signal = controller.update(measurement, dt)
+
+        # Simulate process response to control signal
+        measurement += control_signal * dt  # Simple model
+
+        # Update observer with the latest measurement
+        state_estimate = observer.update(measurement)
+
+        print(f'Measurement: {measurement}, Control Signal: {control_signal}, State Estimate: {state_estimate}')
+
+        time.sleep(dt)  # Wait for the next time step
