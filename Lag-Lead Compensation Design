@@ -1,0 +1,39 @@
+class LagLeadCompensationDesign:
+    def __init__(self, base_salary, commission_rate, bonus_structure, lag_factor, lead_factor):
+        self.base_salary = base_salary
+        self.commission_rate = commission_rate
+        self.bonus_structure = bonus_structure
+        self.lag_factor = lag_factor
+        self.lead_factor = lead_factor
+
+    def calculate_total_compensation(self, sales_amount):
+        commission = sales_amount * self.commission_rate
+        bonus = self.calculate_bonus(sales_amount)
+        lag_adjustment = self.calculate_lag_adjustment(sales_amount)
+        lead_adjustment = self.calculate_lead_adjustment(sales_amount)
+        total_compensation = self.base_salary + commission + bonus + lag_adjustment + lead_adjustment
+        return total_compensation
+
+    def calculate_bonus(self, sales_amount):
+        for threshold, bonus in self.bonus_structure.items():
+            if sales_amount >= threshold:
+                return bonus
+        return 0
+
+    def calculate_lag_adjustment(self, sales_amount):
+        return sales_amount * self.lag_factor
+
+    def calculate_lead_adjustment(self, sales_amount):
+        return sales_amount * self.lead_factor
+
+# Example usage:
+compensation_design = LagLeadCompensationDesign(
+    base_salary=50000,
+    commission_rate=0.1,
+    bonus_structure={100000: 5000, 200000: 10000},
+    lag_factor=0.05,
+    lead_factor=0.03
+)
+
+sales = 150000
+print(f'Total Compensation: ${compensation_design.calculate_total_compensation(sales)}')
