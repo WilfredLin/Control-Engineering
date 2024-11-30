@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define system parameters
+K = 1.0  # Gain
+T = 1.0  # Time constant
+
+# Define time vector
+t = np.linspace(0, 10, 100)
+
+# Define input signal (step input)
+u = np.ones_like(t)
+
+# Initialize output signal
+y = np.zeros_like(t)
+
+# Minor-Loop Feedback Compensation
+for i in range(1, len(t)):
+    # Calculate feedback
+    feedback = K * y[i-1] / T
+    # Update output
+    y[i] = y[i-1] + (K * (u[i] - feedback)) * (t[i] - t[i-1])
+
+# Plot the results
+plt.figure(figsize=(10, 5))
+plt.plot(t, u, label='Input Signal (u)', linestyle='--')
+plt.plot(t, y, label='Output Signal (y)', linewidth=2)
+plt.title('Minor-Loop Feedback Compensation')
+plt.xlabel('Time (s)')
+plt.ylabel('Signal Value')
+plt.legend()
+plt.grid()
+plt.show()
