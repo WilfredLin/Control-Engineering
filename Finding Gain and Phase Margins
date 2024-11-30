@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the transfer function G(s) = K / (s^2 + 2*zeta*omega_n*s + omega_n^2)
+K = 1  # Gain
+omega_n = 1  # Natural frequency
+zeta = 0.5  # Damping ratio
+
+# Create the transfer function
+num = [K]  # Numerator coefficients
+den = [1, 2*zeta*omega_n, omega_n**2]  # Denominator coefficients
+G = signal.TransferFunction(num, den)
+
+# Generate frequency response data
+w, mag, phase = signal.bode(G)
+
+# Find Gain Margin and Phase Margin
+gain_margin = 1 / 10**(-mag[0]/20)  # Gain margin in linear scale
+phase_margin = 180 + phase[np.where(mag < 0)[0][0]]  # Phase margin
+
+# Print Gain and Phase Margins
+print(f"Gain Margin: {gain_margin:.2f} (linear scale)")
+print(f"Phase Margin: {phase_margin:.2f} degrees")
+
+# Plot Bode plot
+plt.figure()
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag)
+plt.title('Bode Plot')
+plt.ylabel('Magnitude (dB)')
+plt.grid()
+
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid()
+
+plt.show()
