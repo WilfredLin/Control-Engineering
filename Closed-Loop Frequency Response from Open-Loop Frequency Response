@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the open-loop transfer function parameters
+num_open = [1]  # Numerator coefficients for open-loop
+den_open = [1, 2, 1]  # Denominator coefficients for open-loop
+
+# Create an open-loop transfer function
+system_open = signal.TransferFunction(num_open, den_open)
+
+# Frequency range for Bode plot
+w = np.logspace(-2, 2, 100)  # Frequency range from 0.01 to 100 rad/s
+
+# Generate Bode plot data for open-loop system
+w_open, mag_open, phase_open = signal.bode(system_open, w)
+
+# Calculate closed-loop transfer function
+num_closed = num_open  # Numerator coefficients for closed-loop
+den_closed = np.polymul(den_open, [1])  # Denominator coefficients for closed-loop
+system_closed = signal.TransferFunction(num_closed, den_closed)
+
+# Generate Bode plot data for closed-loop system
+w_closed, mag_closed, phase_closed = signal.bode(system_closed, w)
+
+# Plot open-loop and closed-loop magnitude
+plt.figure(figsize=(10, 6))
+plt.subplot(2, 1, 1)
+plt.semilogx(w_open, mag_open, label='Open-Loop', linestyle='--')  # Open-loop magnitude
+plt.semilogx(w_closed, mag_closed, label='Closed-Loop')  # Closed-loop magnitude
+plt.title('Bode Plot - Open-Loop vs Closed-Loop')
+plt.ylabel('Magnitude (d
