@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, bode
+
+# Define the transfer function
+num = [1]  # Numerator coefficients
+den = [1, 3, 2]  # Denominator coefficients (s^2 + 3s + 2)
+system = TransferFunction(num, den)
+
+# Function to calculate frequency and gain at imaginary-axis crossing
+def frequency_gain_at_imaginary_axis(system):
+    # Frequency values for bode plot
+    frequencies = np.logspace(-2, 2, 100)  # Frequency range from 0.01 to 100
+    mag, phase, omega = bode(system, frequencies, Plot=False)
+    
+    # Gain at imaginary-axis crossing (where frequency = 0)
+    gain_at_zero = 20 * np.log10(mag[0])  # Gain in dB
+    frequency_at_zero = omega[0]  # Frequency at zero
+    
+    return frequency_at_zero, gain_at_zero
+
+# Calculate frequency and gain at imaginary-axis crossing
+frequency, gain = frequency_gain_at_imaginary_axis(system)
+
+# Print results
+print(f"Frequency at Imaginary-Axis Crossing: {frequency:.2f} rad/s")
+print(f"Gain at Imaginary-Axis Crossing: {gain:.2f} dB")
+
+# Plot Bode plot
+plt.figure(figsize=(10, 6))
+plt.subplot(2, 1, 1)
+plt.semilogx(omega, 20 * np.log10(mag))  # Gain plot
+plt.title('Bode Plot')
+plt.ylabel('Gain (dB)')
+plt.grid()
+
+plt.subplot(2, 1, 2)
+plt.semilogx(omega, phase)  # Phase plot
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid()
+
+plt.tight_layout()
+plt.show()
