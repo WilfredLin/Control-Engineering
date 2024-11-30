@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, step
+
+# Define the transfer function parameters
+numerator = [1]  # Example: K
+# Denominator: s^2 + 2*zeta*wn*s + wn^2
+zeta = 0.5  # Damping ratio
+wn = 1.0  # Natural frequency
+
+# Create the transfer function
+denominator = [1, 2*zeta*wn, wn**2]
+H = TransferFunction(numerator, denominator)
+
+# Generate the step response
+t, y = step(H)
+
+# Calculate the percent overshoot
+final_value = y[-1]  # Steady-state value
+peak_value = np.max(y)  # Peak value
+percent_overshoot = ((peak_value - final_value) / final_value) * 100
+
+# Print the percent overshoot
+print(f'Percent Overshoot: {percent_overshoot:.2f}%')
+
+# Plot the step response
+plt.plot(t, y)
+plt.title('Step Response')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.grid()
+plt.show()
