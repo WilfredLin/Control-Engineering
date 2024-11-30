@@ -1,0 +1,24 @@
+import sympy as sp
+
+# Define the variable
+s = sp.symbols('s')
+z = sp.symbols('z')
+
+# Define the transfer function G1(s) of the system
+G1_s = 1 / (s + 1)
+
+# Define the feedback transfer function H(s)
+H_s = 1 / (s + 2)
+
+# Calculate the open-loop transfer function
+G_open_loop = G1_s * H_s
+
+# Calculate the closed-loop transfer function
+G_closed_loop_s = G_open_loop / (1 + G_open_loop)
+
+# Define the zero-order hold (ZOH) conversion
+G_closed_loop_z = sp.apart(sp.inverse_laplace(G_closed_loop_s, s, z))
+
+# Display the result of the ZOH conversion
+print("Pulse Transfer Function G(z) of the Feedback System after ZOH conversion:")
+print(G_closed_loop_z)
