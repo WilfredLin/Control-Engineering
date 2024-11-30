@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import lti, step
+
+# Define the system parameters
+numerator = [1]  # Example numerator coefficients
+ denominator = [1, 2, 1]  # Example denominator coefficients
+system = lti(numerator, denominator)
+
+# Generate time values
+t = np.linspace(0, 10, 1000)
+
+# Get the step response
+t, response = step(system, T=t)
+
+# Calculate settling time (within 2% of final value)
+final_value = response[-1]
+settling_time = t[np.where(np.abs(response - final_value) <= 0.02 * final_value)[0][0]]
+
+# Calculate peak time (time at which the peak occurs)
+peak_time = t[np.argmax(response)]
+
+# Plotting the response
+plt.figure(figsize=(10, 6))
+plt.plot(t, response, label='Step Response')
+plt.axhline(final_value, color='r', linestyle='--', label='Final Value')
+plt.axvline(settling_time, color='g', linestyle='--', label='Settling Time')
+plt.axvline(peak_time, color='b', linestyle='--', label='Peak Time')
+plt.title('Open-Loop Frequency Response')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.legend()
+plt.grid()
+plt.show()
+
+# Output results
+print(f'Settling Time: {settling_time:.2f} s')
+print(f'Peak Time: {peak_time:.2f} s')
