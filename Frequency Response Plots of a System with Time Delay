@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the system parameters
+num = [1]  # Numerator coefficients
+den = [1, 2, 1]  # Denominator coefficients
+system = signal.TransferFunction(num, den)
+
+# Define the time delay
+delay = 1.0  # Time delay in seconds
+
+# Frequency range for the plot
+w = np.logspace(-2, 2, 100)  # Frequency range from 0.01 to 100 rad/s
+
+# Calculate the frequency response
+w, h = signal.freqresp(system, w)
+
+# Apply the time delay to the frequency response
+h_delay = h * np.exp(-1j * w * delay)
+
+# Plot the frequency response
+plt.figure(figsize=(10, 6))
+plt.subplot(2, 1, 1)
+plt.semilogx(w, 20 * np.log10(np.abs(h_delay)))  # Magnitude plot
+plt.title('Frequency Response with Time Delay')
+plt.ylabel('Magnitude (dB)')
+plt.grid()
+
+plt.subplot(2, 1, 2)
+plt.semilogx(w, np.angle(h_delay))  # Phase plot
+plt.ylabel('Phase (radians)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid()
+
+plt.tight_layout()
+plt.show()
