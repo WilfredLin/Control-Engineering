@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+class AntennaControl:
+    def __init__(self, num_sections, gains):
+        self.num_sections = num_sections
+        self.gains = gains
+        self.sections = [self.create_section(gain) for gain in gains]
+
+    def create_section(self, gain):
+        return {'gain': gain, 'input': 0, 'output': 0}
+
+    def process(self, input_signal):
+        output_signal = []
+        for sample in input_signal:
+            current_input = sample
+            for section in self.sections:
+                section['input'] = current_input
+                section['output'] = section['gain'] * section['input']
+                current_input = section['output']
+            output_signal.append(current_input)
+        return output_signal
+
+    def transient_response(self, input_signal):
+        output_signal = self.process(input_signal)
+        return output_signal
+
+# Example usage
+if __name__ == '__main__':
+    num_sections = 4
+    gains = [0.3, 0.7, 1.5, 2.5]
+    antenna_control = AntennaControl(num_sections, gains)
+    input_signal = np.random.rand(100)  # Random input signal
+    output_signal = antenna_control.transient_response(input_signal)
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(input_signal, label='Input Signal')
+    plt.plot(output_signal, label='Output Signal', linestyle='--')
+    plt.title('Antenna Control Transient Response')
+    plt.xlabel('Sample Index')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.grid()
+    plt.show()
