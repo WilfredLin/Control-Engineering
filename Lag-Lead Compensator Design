@@ -1,0 +1,45 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, step, feedback
+
+# Define the system transfer function G(s) = 1 / (s^2 + 3s + 2)
+num_G = [1]  # Numerator coefficients
+den_G = [1, 3, 2]  # Denominator coefficients (s^2 + 3s + 2)
+G = TransferFunction(num_G, den_G)
+
+# Lag compensator parameters
+K_lag = 1  # Gain of the lag compensator
+T_lag = 1  # Time constant of the lag compensator
+num_Lag = [K_lag * T_lag, K_lag]  # Numerator coefficients (K_lag * T_lag * s + K_lag)
+den_Lag = [T_lag, 1]  # Denominator coefficients (T_lag * s + 1)
+Lag = TransferFunction(num_Lag, den_Lag)
+
+# Lead compensator parameters
+K_lead = 1  # Gain of the lead compensator
+T_lead = 0.5  # Time constant of the lead compensator
+num_Lead = [K_lead, K_lead * T_lead]  # Numerator coefficients (K_lead * s + K_lead * T_lead)
+den_Lead = [T_lead, 1]  # Denominator coefficients (T_lead * s + 1)
+Lead = TransferFunction(num_Lead, den_Lead)
+
+# Combined compensator
+C = Lag * Lead
+
+# Closed-loop transfer function with the Lag-Lead compensator
+system_with_compensator = feedback(C * G)
+
+# Time vector for simulation
+t = np.linspace(0, 10, 1000)
+
+# Step response of the system with Lag-Lead compensator
+t, y = step(system_with_compensator, T=t)
+
+# Plotting the step response
+plt.figure(figsize=(10, 6))
+plt.plot(t, y, label='Step Response with Lag-Lead Compensator')
+plt.title('Effect of a Lag-Lead Compensator')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.axhline(1, color='red', lw=0.5, ls='--', label='Steady State Value')
+plt.grid()
+plt.legend()
+plt.show()
