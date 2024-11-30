@@ -1,0 +1,22 @@
+import sympy as sp
+
+# Define the variable
+z = sp.symbols('z')
+
+# Define the function H(z)
+H_z = (z + 2)/(z**2 + 3*z + 2)
+
+# Perform the partial fraction expansion
+partial_fractions = sp.apart(H_z)
+
+# Display the partial fraction result
+print("Partial Fraction Expansion:")
+print(partial_fractions)
+
+# Inverse z-transform
+n = sp.symbols('n', integer=True)
+H_n = sp.inverse_ztransform(H_z, z, n)
+
+# Display the result of the inverse z-transform
+print("Inverse Z-Transform:")
+print(H_n)
