@@ -1,0 +1,36 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, lti, step
+
+# Define the system parameters
+K = 1.0  # Gain
+T1 = 1.0  # Time constant for lag
+T2 = 0.5  # Time constant for lead
+
+# Create the lag and lead transfer functions
+lag = TransferFunction([K * T1], [T1, 1])
+lead = TransferFunction([K * T2, 1], [T2, 1])
+
+# Combine the transfer functions
+system = lag * lead
+
+# Generate the Nichols chart
+w = np.logspace(-2, 2, 100)  # Frequency range
+w, mag, phase = system.bode(w)
+
+# Plot the Nichols chart
+plt.figure(figsize=(10, 6))
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag)  # Magnitude plot
+plt.title('Nichols Chart')
+plt.ylabel('Magnitude (dB)')
+plt.grid()
+
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)  # Phase plot
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid()
+
+plt.tight_layout()
+plt.show()
