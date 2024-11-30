@@ -1,0 +1,50 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Function to calculate the range of gain for stability in a system with time delay
+
+def range_of_gain_for_stability(num, den, delay, gain_range):
+    # Create a transfer function
+    system = signal.TransferFunction(num, den)
+    
+    # Create an array of gains to test
+    gains = np.linspace(gain_range[0], gain_range[1], 100)
+    stable_gains = []
+    unstable_gains = []
+    
+    for gain in gains:
+        # Create a new transfer function with the current gain
+        system_with_gain = signal.TransferFunction(gain * num, den)
+        
+        # Calculate the poles of the system with time delay
+        poles = signal.lti(num, den).poles
+        
+        # Check stability using the Routh-Hurwitz criterion or other methods
+        if np.all(np.real(poles) < 0):
+            stable_gains.append(gain)
+        else:
+            unstable_gains.append(gain)
+    
+    return stable_gains, unstable_gains
+
+# Example parameters
+numerator = [1]  # Example numerator
+ denominator = [1, 2, 1]  # Example denominator
+ time_delay = 1  # Time delay
+ gain_range = (0, 10)  # Gain range to test
+
+# Calculate stable and unstable gains
+stable, unstable = range_of_gain_for_stability(numerator, denominator, time_delay, gain_range)
+
+# Plotting the results
+plt.figure(figsize=(10, 5))
+plt.plot(stable, np.ones_like(stable), 'go', label='Stable Gains')
+plt.plot(unstable, np.ones_like(unstable), 'ro', label='Unstable Gains')
+plt.title('Range of Gain for Stability in Time Delay System')
+plt.xlabel('Gain')
+plt.ylabel('Stability')
+plt.axhline(0, color='black', lw=0.5)
+plt.legend()
+plt.grid()
+plt.show()
