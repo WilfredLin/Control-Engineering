@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, bode
+
+# Define the transfer function with complex poles
+num = [1]  # Numerator coefficients
+den = [1, 2, 5]  # Denominator coefficients (s^2 + 2s + 5)
+system = TransferFunction(num, den)
+
+# Function to calculate angle of departure from complex poles
+def angle_of_departure(system):
+    # Get the poles of the system
+    poles = system.pole()
+    
+    # Initialize angles list
+    angles = []
+    
+    for pole in poles:
+        if np.iscomplex(pole):  # Check if the pole is complex
+            angle = np.angle(pole)  # Angle of the pole in radians
+            angles.append(angle)
+    
+    return angles
+
+# Calculate angle of departure
+angles = angle_of_departure(system)
+
+# Print results
+for i, angle in enumerate(angles):
+    print(f"Angle of Departure from Complex Pole {i+1}: {np.degrees(angle):.2f} degrees")
+
+# Plotting the poles on the complex plane
+plt.figure(figsize=(6, 6))
+plt.scatter(np.real(poles), np.imag(poles), color='red', label='Poles')
+plt.axhline(0, color='black', lw=0.5, ls='--')
+plt.axvline(0, color='black', lw=0.5, ls='--')
+plt.title('Poles in the Complex Plane')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.grid()
+plt.legend()
+plt.xlim(-6, 2)
+plt.ylim(-3, 3)
+plt.show()
