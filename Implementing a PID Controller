@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define system parameters
+Kp = 1.0  # Proportional gain
+Ki = 0.1  # Integral gain
+Kd = 0.05  # Derivative gain
+T = 1.0  # Time constant
+
+# Define time vector
+t = np.linspace(0, 10, 100)
+
+# Define input signal (step input)
+u = np.ones_like(t)
+
+# Initialize output signal and error terms
+y = np.zeros_like(t)
+error = np.zeros_like(t)
+integral = 0.0
+previous_error = 0.0
+
+# PID Control Loop
+for i in range(1, len(t)):
+    # Calculate error
+    error[i] = u[i] - y[i-1]
+    
+    # Calculate integral and derivative
+    integral += error[i] * (t[i] - t[i-1])
+    derivative = (error[i] - previous_error) / (t[i] - t[i-1])
+    
+    # Update output using PID formula
+    y[i] = y[i-1] + (Kp * error[i] + Ki * integral + Kd * derivative) * (t[i] - t[i-1])
+    
+    # Update previous error
+    previous_error = error[i]
+
+# Plot the results
+plt.figure(figsize=(10, 5))
+plt.plot(t, u, label='Input Signal (u)', linestyle='--')
+plt.plot(t, y, label='Output Signal (y)', linewidth=2)
+plt.title('PID Controller Implementation')
+plt.xlabel('Time (s)')
+plt.ylabel('Signal Value')
+plt.legend()
+plt.grid()
+plt.show()
