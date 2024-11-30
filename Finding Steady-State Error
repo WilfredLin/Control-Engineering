@@ -1,0 +1,42 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+def steady_state_error(system, reference_signal, time):
+    # Create the time vector
+    t = np.linspace(0, time, num=1000)
+
+    # Generate the reference signal (step input)
+    r = reference_signal * np.ones_like(t)
+
+    # Simulate the system response to the reference signal
+    t, y, _ = signal.lsim(system, r, t)
+
+    # Calculate the steady-state error
+    error = r - y
+    steady_state_error = error[-1]
+
+    return steady_state_error, t, y
+
+# Example usage
+num = [1]  # Numerator coefficients of the transfer function
+den = [1, 2, 1]  # Denominator coefficients of the transfer function
+system = signal.TransferFunction(num, den)
+
+reference_signal = 1  # Step input
+time = 10  # Duration of the simulation
+
+error, t, y = steady_state_error(system, reference_signal, time)
+
+print("Steady-State Error:", error)
+
+# Plotting the results
+plt.figure()
+plt.plot(t, y, label='System Response')
+plt.plot(t, reference_signal * np.ones_like(t), 'r--', label='Reference Signal')
+plt.title('System Response vs Reference Signal')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.legend()
+plt.grid()
+plt.show()
