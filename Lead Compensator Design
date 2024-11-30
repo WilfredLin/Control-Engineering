@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, step, feedback
+
+# Define the system transfer function G(s) = 1 / (s^2 + 3s + 2)
+num_G = [1]  # Numerator coefficients
+den_G = [1, 3, 2]  # Denominator coefficients (s^2 + 3s + 2)
+G = TransferFunction(num_G, den_G)
+
+# Design parameters for the lead compensator
+K = 10  # Gain of the compensator
+alpha = 10  # Lead compensator parameter
+num_C = [K * alpha, K]  # Numerator coefficients (K * alpha * s + K)
+den_C = [alpha, 1]  # Denominator coefficients (alpha * s + 1)
+C = TransferFunction(num_C, den_C)
+
+# Closed-loop transfer function with the lead compensator
+system_with_lead = feedback(C * G)
+
+# Time vector for simulation
+t = np.linspace(0, 10, 1000)
+
+# Step response of the system with lead compensator
+t, y = step(system_with_lead, T=t)
+
+# Plotting the step response
+plt.figure(figsize=(10, 6))
+plt.plot(t, y, label='Step Response with Lead Compensator')
+plt.title('Effect of a Lead Compensator')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.axhline(1, color='red', lw=0.5, ls='--', label='Steady State Value')
+plt.grid()
+plt.legend()
+plt.show()
