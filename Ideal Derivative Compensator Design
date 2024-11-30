@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction, step, feedback
+
+# Define the system transfer function G(s) = 1 / (s^2 + 3s + 2)
+num_G = [1]  # Numerator coefficients
+den_G = [1, 3, 2]  # Denominator coefficients (s^2 + 3s + 2)
+G = TransferFunction(num_G, den_G)
+
+# Define the ideal derivative compensator C(s) = K * s
+K = 10  # Gain of the compensator
+num_C = [K, 0]  # Numerator coefficients (K * s)
+den_C = [1]  # Denominator coefficients
+C = TransferFunction(num_C, den_C)
+
+# Closed-loop transfer function with the ideal derivative compensator
+system_with_derivative = feedback(C * G)
+
+# Time vector for simulation
+t = np.linspace(0, 10, 1000)
+
+# Step response of the system with derivative compensator
+t, y = step(system_with_derivative, T=t)
+
+# Plotting the step response
+plt.figure(figsize=(10, 6))
+plt.plot(t, y, label='Step Response with Ideal Derivative Compensator')
+plt.title('Effect of an Ideal Derivative Compensator')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.axhline(1, color='red', lw=0.5, ls='--', label='Steady State Value')
+plt.grid()
+plt.legend()
+plt.show()
