@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the transfer function parameters
+num = [1]  # Numerator coefficients
+den = [1, 2, 1]  # Denominator coefficients
+
+# Create a transfer function
+system = signal.TransferFunction(num, den)
+
+# Frequency range for Bode plot
+w = np.logspace(-2, 2, 100)  # Frequency range from 0.01 to 100 rad/s
+
+# Generate Bode plot data
+w, mag, phase = signal.bode(system, w)
+
+# Plot magnitude
+plt.figure(figsize=(10, 6))
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag)  # Bode magnitude plot
+plt.title('Bode Plot')
+plt.ylabel('Magnitude (dB)')
+plt.grid(which='both', axis='both')
+
+# Plot phase
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)  # Bode phase plot
+plt.ylabel('Phase (degrees)')
+plt.xlabel('Frequency (rad/s)')
+plt.grid(which='both', axis='both')
+
+plt.tight_layout()
+plt.show()
