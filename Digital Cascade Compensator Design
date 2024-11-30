@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+def digital_cascade_compensator_design(num, den, gain, zeros, poles):
+    # Create the transfer function for the original system
+    original_system = signal.TransferFunction(num, den)
+
+    # Create the transfer function for the compensator
+    compensator = signal.TransferFunction(np.poly(zeros), np.poly(poles))
+
+    # Combine the original system with the compensator
+    combined_system = signal.TransferFunction(np.convolve(num, np.poly(zeros)) * gain, np.convolve(den, np.poly(poles)))
+
+    # Generate time vector
+    t = np.linspace(0, 10, 1000)
+
+    # Compute step response for the combined system
+    t_combined, y_combined = signal.step(combined_system, T=t)
+
+    # Plot the step response
+    plt.figure()
+    plt.plot(t_combined, y_combined, label='Combined System Response')
+    plt.title('Digital Cascade Compensator Design Step Response')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Response')
+    plt.grid()
+    plt.axhline(0, color='black', lw=0.5, ls='--')
+    plt.axvline(0, color='black', lw=0.5, ls='--')
+    plt.legend()
+    plt.show()
+
+# Example usage
+num = [1]  # Numerator coefficients of the original transfer function
+den = [1, 2, 1]  # Denominator coefficients of the original transfer function
+gain = 2  # Gain adjustment
+zeros = [0.5, 1.5]  # Zeros of the compensator
+poles = [0.1, 0.2]  # Poles of the compensator
+
+digital_cascade_compensator_design(num, den, gain, zeros, poles)
