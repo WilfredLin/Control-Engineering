@@ -1,0 +1,31 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+def plot_step_response(num, den, gain):
+    # Create a transfer function system with gain
+    system = signal.TransferFunction(np.array(num) * gain, den)
+
+    # Generate time vector
+    t = np.linspace(0, 10, 1000)
+
+    # Compute step response
+    t, y = signal.step(system, T=t)
+
+    # Plot the step response
+    plt.figure()
+    plt.plot(t, y)
+    plt.title('Step Response with Gain Adjustment')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Response')
+    plt.grid()
+    plt.axhline(0, color='black', lw=0.5, ls='--')
+    plt.axvline(0, color='black', lw=0.5, ls='--')
+    plt.show()
+
+# Example usage
+num = [1]  # Numerator coefficients of the transfer function
+den = [1, 2, 1]  # Denominator coefficients of the transfer function
+gain = 2  # Gain adjustment
+
+plot_step_response(num, den, gain)
