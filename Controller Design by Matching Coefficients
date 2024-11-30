@@ -1,0 +1,62 @@
+import numpy as np
+
+# Define the system parameters
+A = np.array([[0, 1], [-2, -3]])  # State matrix
+B = np.array([[0], [1]])           # Input matrix
+C = np.array([[1, 0]])             # Output matrix
+D = np.array([[0]])                 # Feedforward matrix
+
+# Desired poles
+desired_poles = np.array([-1, -2])
+
+# Calculate the controllability matrix
+def controllability_matrix(A, B):
+    n = A.shape[0]
+    C = B
+    for i in range(1, n):
+        C = np.hstack((C, np.linalg.matrix_power(A, i) @ B))
+    return C
+
+# Compute the controllability matrix
+C_matrix = controllability_matrix(A, B)
+
+# Check the rank of the controllability matrix
+rank_C = np.linalg.matrix_rank(C_matrix)
+
+# Display the controllability matrix and its rank
+print("Controllability Matrix C:")
+print(C_matrix)
+print("Rank of the Controllability Matrix:", rank_C)
+
+# Determine controllability
+if rank_C == A.shape[0]:
+    print("The system is controllable.")
+else:
+    print("The system is not controllable.")
+
+# Design the state feedback controller using pole placement
+def place_poles(A, B, desired_poles):
+    # Calculate the characteristic polynomial of the desired poles
+    desired_char_poly = np.poly(desired_poles)
+    
+    # Calculate the characteristic polynomial of the system
+    n = A.shape[0]
+    sys_char_poly = np.poly(np.linalg.eigvals(A))
+    
+    # Coefficients of the characteristic polynomial
+    sys_coeffs = sys_char_poly[1:]  # Skip the leading 1
+    desired_coeffs = desired_char_poly[1:]  # Skip the leading 1
+    
+    # Calculate the feedback gain matrix K
+    K = np.zeros(B.shape[1])
+    for i in range(n):
+        K += desired_coeffs[i] * np.linalg.matrix_power(A, i) @ B
+    
+    return K
+
+# Compute the feedback gain matrix K
+K = place_poles(A, B, desired_poles)
+
+# Display the feedback gain matrix
+print("Feedback Gain Matrix K:")
+print(K)
