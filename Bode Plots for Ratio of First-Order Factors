@@ -1,0 +1,36 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, bode
+
+# Define the numerator and denominator for the first-order factors
+# Example: H(s) = (s + a1) / (s + b1) * (s + a2) / (s + b2)
+a1, b1 = 1, 1  # First-order factor 1: (s + a1) / (s + b1)
+a2, b2 = 2, 2  # First-order factor 2: (s + a2) / (s + b2)
+
+# Define the transfer function for the product of two first-order factors
+numerator = [1, a1 + a2]  # Coefficients of s^1 and s^0
+denominator = [1, b1 + b2, b1 * b2]  # Coefficients of s^2, s^1, and s^0
+
+# Create a transfer function
+system = TransferFunction(numerator, denominator)
+
+# Generate Bode plot data
+w, mag, phase = bode(system)
+
+# Plot the magnitude and phase
+plt.figure(figsize=(10, 6))
+
+plt.subplot(2, 1, 1)
+plt.semilogx(w, mag)  # Magnitude plot
+plt.title('Bode Plot of First-Order Factors')
+plt.ylabel('Magnitude (dB)')
+plt.grid()
+
+plt.subplot(2, 1, 2)
+plt.semilogx(w, phase)  # Phase plot
+plt.xlabel('Frequency (rad/s)')
+plt.ylabel('Phase (degrees)')
+plt.grid()
+
+plt.tight_layout()
+plt.show()
