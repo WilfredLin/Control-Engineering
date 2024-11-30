@@ -1,0 +1,15 @@
+import sympy as sp
+
+# Define the variable
+s = sp.symbols('s')
+z = sp.symbols('z')
+
+# Define the transfer function G1(s)
+G1_s = 1 / (s + 1)
+
+# Define the zero-order hold (ZOH) conversion
+G_z = sp.apart(sp.inverse_laplace(G1_s, s, z))
+
+# Display the result of the ZOH conversion
+print("Transfer Function G(z) after ZOH conversion:")
+print(G_z)
