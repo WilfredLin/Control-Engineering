@@ -1,0 +1,36 @@
+class IntegralController:
+    def __init__(self, setpoint, K_i):
+        self.setpoint = setpoint
+        self.K_i = K_i
+        self.integral = 0
+        self.previous_error = 0
+
+    def update(self, measurement, dt):
+        error = self.setpoint - measurement
+        self.integral += error * dt
+        control_signal = self.K_i * self.integral
+        self.previous_error = error
+        return control_signal
+
+# Example usage
+if __name__ == '__main__':
+    import time
+
+    setpoint = 100  # Desired setpoint
+    K_i = 1.0      # Integral gain
+    controller = IntegralController(setpoint, K_i)
+
+    # Simulated process variable
+    measurement = 0
+
+    # Simulation loop
+    while True:
+        dt = 1  # Time step in seconds
+        control_signal = controller.update(measurement, dt)
+
+        # Simulate process response to control signal
+        measurement += control_signal * dt  # Simple model
+
+        print(f'Measurement: {measurement}, Control Signal: {control_signal}')
+
+        time.sleep(dt)  # Wait for the next time step
