@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from control import TransferFunction
+
+# Define the transfer function
+num = [1]  # Numerator coefficients
+den = [1, 3, 2]  # Denominator coefficients (s^2 + 3s + 2)
+system = TransferFunction(num, den)
+
+# Function to calculate the characteristic equation
+def characteristic_equation(system, s):
+    num = np.polyval(system.num, s)
+    den = np.polyval(system.den, s)
+    return den
+
+# Function to find breakaway and break-in points without differentiation
+def find_breakaway_breakin_points(system):
+    s_values = np.linspace(-5, 5, 1000)
+    characteristic_values = characteristic_equation(system, s_values)
+    
+    # Find points where the characteristic equation is zero (breakaway/break-in points)
+    break_points = s_values[np.isclose(characteristic_values, 0, atol=1e-3)]
+    return break_points
+
+# Calculate breakaway and break-in points
+break_points = find_breakaway_breakin_points(system)
+
+# Plot the root locus
+plt.figure(figsize=(10, 6))
+plt.plot(break_points, np.zeros_like(break_points), 'ro', label='Breakaway/Break-in Points')
+
+# Set plot limits and labels
+plt.xlim(-5, 5)
+plt.ylim(-5, 5)
+plt.axhline(0, color='black', lw=0.5, ls='--')
+plt.axvline(0, color='black', lw=0.5, ls='--')
+plt.title('Breakaway and Break-in Points Without Differentiation')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.grid()
+plt.gca().set_aspect('equal', adjustable='box')
+plt.legend()
+plt.show()
