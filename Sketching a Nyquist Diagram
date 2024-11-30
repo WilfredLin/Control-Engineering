@@ -1,0 +1,36 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, freqresp
+
+# Define the numerator and denominator for the transfer function
+# Example: H(s) = (s + a1) / (s + b1) * (s + a2) / (s + b2) / ((s + c1) * (s + c2))
+a1, b1 = 1, 1  # First-order factor 1: (s + a1) / (s + b1)
+a2, b2 = 2, 2  # First-order factor 2: (s + a2) / (s + b2)
+c1, c2 = 3, 3  # Second-order factor: (s + c1)(s + c2)
+
+# Define the transfer function for the ratio of two first-order factors to a second-order factor
+numerator = [1, a1 + a2]  # Coefficients of s^1 and s^0
+denominator = [1, b1 + b2, b1 * b2]  # Coefficients of s^2, s^1, and s^0
+denominator = np.convolve(denominator, [1, c1])  # Multiply by (s + c1)
+denominator = np.convolve(denominator, [1, c2])  # Multiply by (s + c2)
+
+# Create a transfer function
+system = TransferFunction(numerator, denominator)
+
+# Generate frequency response data
+frequencies = np.logspace(-2, 2, 500)  # Frequency range from 0.01 to 100 rad/s
+w, h = freqresp(system, frequencies)
+
+# Plot the Nyquist diagram
+plt.figure(figsize=(10, 10))
+plt.plot(h.real, h.imag, label='Nyquist Plot')
+plt.plot(h.real, -h.imag, label='Negative Imaginary', linestyle='--')  # Reflect across the real axis
+plt.title('Nyquist Diagram of the Transfer Function')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.axhline(0, color='black',linewidth=0.5, ls='--')
+plt.axvline(0, color='black',linewidth=0.5, ls='--')
+plt.grid()
+plt.legend()
+plt.axis('equal')
+plt.show()
