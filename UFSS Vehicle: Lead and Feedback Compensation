@@ -1,0 +1,49 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the parameters for the vehicle model
+mass = 1000  # Mass of the vehicle (kg)
+damping = 50  # Damping coefficient (N·s/m)
+stiffness = 20000  # Spring stiffness (N/m)
+
+# Define the lead compensator parameters
+K_lead = 10  # Gain for lead compensator
+T1 = 0.1  # Zero for lead compensator
+T2 = 0.01  # Pole for lead compensator
+
+# Define the feedback compensator parameters
+K_feedback = 5  # Feedback gain
+
+# Create the transfer function for the lead compensator
+num_lead = [K_lead * T1, K_lead]  # Numerator coefficients for lead compensator
+den_lead = [T2, 1]  # Denominator coefficients for lead compensator
+lead_compensator = signal.TransferFunction(num_lead, den_lead)
+
+# Create the transfer function for the vehicle model (mass-spring-damper system)
+num_vehicle = [1]  # Numerator coefficients for vehicle model
+den_vehicle = [mass, damping, stiffness]  # Denominator coefficients for vehicle model
+vehicle_model = signal.TransferFunction(num_vehicle, den_vehicle)
+
+# Create the feedback loop
+feedback_system = signal.TransferFunction([K_feedback], [1])
+
+# Combine the lead compensator with the vehicle model and feedback
+combined_num = np.convolve(num_lead, num_vehicle)
+combined_den = np.convolve(den_lead, den_vehicle)
+combined_system = signal.TransferFunction(combined_num, combined_den)
+
+# Generate a time vector
+t = np.linspace(0, 10, 1000)
+
+# Step response of the combined system
+t, y = signal.step(combined_system, T=t)
+
+# Plot the step response
+plt.figure()
+plt.plot(t, y)
+plt.title('Step Response of UFSS Vehicle with Lead and Feedback Compensation')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.grid()
+plt.show()
