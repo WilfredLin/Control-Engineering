@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, freqresp
+
+# Define the open-loop transfer function with poles
+# Example: H(s) = K / ((s + p1)(s + p2)(s + p3))
+K = 1  # Gain
+p1, p2, p3 = 1, 2, 3  # Poles
+
+# Define the transfer function for the open-loop system
+numerator = [K]  # Coefficients of s^0
+denominator = np.convolve([1, p1], np.convolve([1, p2], [1, p3]))  # (s + p1)(s + p2)(s + p3)
+
+# Create a transfer function
+system = TransferFunction(numerator, denominator)
+
+# Generate frequency response data
+frequencies = np.logspace(-2, 2, 500)  # Frequency range from 0.01 to 100 rad/s
+w, h = freqresp(system, frequencies)
+
+# Plot the Nyquist diagram
+plt.figure(figsize=(10, 10))
+plt.plot(h.real, h.imag, label='Nyquist Plot')
+plt.plot(h.real, -h.imag, label='Negative Imaginary', linestyle='--')  # Reflect across the real axis
+plt.title('Nyquist Diagram of the Open-Loop Transfer Function')
+plt.xlabel('Real Part')
+plt.ylabel('Imaginary Part')
+plt.axhline(0, color='black', linewidth=0.5, ls='--')
+plt.axvline(0, color='black', linewidth=0.5, ls='--')
+plt.grid()
+plt.legend()
+plt.axis('equal')
+plt.show()
