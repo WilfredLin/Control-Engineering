@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import lti, step
+
+# Define system parameters
+K = 1.0  # Gain
+T = 1.0  # Time constant
+L = 0.5  # Time delay
+
+# Define the transfer function for a first-order system with time delay
+num = [K]  # Numerator
+den = [T, 1]  # Denominator
+system = lti(num, den)
+
+# Simulate the step response
+t = np.linspace(0, 10, 1000)  # Time vector
+T_delay = np.linspace(0, L, 1000)  # Delay time vector
+t_response = t + L  # Adjust time for delay
+T_response = step(system, T=t_response)[1]  # Step response
+
+# Calculate Percent Overshoot
+settling_value = K  # Final value after settling
+peak_value = np.max(T_response)  # Maximum value of response
+percent_overshoot = ((peak_value - settling_value) / settling_value) * 100
+
+# Plot the response
+plt.figure(figsize=(10, 5))
+plt.plot(t, T_response, label='Step Response', color='b')
+plt.axhline(settling_value, color='r', linestyle='--', label='Settling Value')
+plt.title('Step Response with Time Delay')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.legend()
+plt.grid()
+plt.show()
+
+# Print the Percent Overshoot
+print(f'Percent Overshoot: {percent_overshoot:.2f}%')
