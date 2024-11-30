@@ -1,0 +1,28 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+
+# Define the lead compensator parameters
+K = 10  # Gain
+T1 = 0.1  # Zero
+T2 = 0.01  # Pole
+
+# Create the transfer function for the lead compensator
+num = [K * T1, K]  # Numerator coefficients
+den = [T2, 1]  # Denominator coefficients
+lead_compensator = signal.TransferFunction(num, den)
+
+# Generate a time vector
+t = np.linspace(0, 10, 1000)
+
+# Step response of the lead compensator
+t, y = signal.step(lead_compensator, T=t)
+
+# Plot the step response
+plt.figure()
+plt.plot(t, y)
+plt.title('Step Response of Lead Compensator')
+plt.xlabel('Time (s)')
+plt.ylabel('Response')
+plt.grid()
+plt.show()
